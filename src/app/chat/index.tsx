@@ -1,9 +1,8 @@
 import React, {useState} from "react";
-import {Button, Card, Flex, Icon, InputItem, Modal, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
+import {Button, Flex, InputItem, Modal, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
 import {inject, observer} from "mobx-react";
 import {IChatStore} from "../../mobx/chatStore";
-import {Image, ScrollView, StyleSheet} from "react-native";
-import ItemList from "./ItemList";
+import {Image, StyleSheet, Button as RnButton, Pressable} from "react-native";
 
 interface IProps {
     chatStore: IChatStore;
@@ -12,7 +11,6 @@ interface IProps {
 interface IState {
     open: boolean;
 }
-
 
 
 
@@ -48,9 +46,6 @@ class ChatApp extends React.Component<IProps, IState>{
                     <Text>{chatStore.name}</Text>
 
 
-                    {/* 悬浮与input上方的上拉框，可以打开细致配置*/}
-
-
                     {/*输入框和button按钮*/}
                     <Flex style={styles.inputWrapper} align='center'>
                         <View style={styles.inputs}>
@@ -70,7 +65,7 @@ class ChatApp extends React.Component<IProps, IState>{
 
                     <Modal
                         popup
-                        visible={true}
+                        visible={chatStore.openAddon}
                         animationType="slide-up"
                         onClose={this.handleOpenAddon}
                         style={styles.modal}
@@ -78,9 +73,31 @@ class ChatApp extends React.Component<IProps, IState>{
                         <WingBlank>
                             <View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
 
-                                <Text style={styles.modalTitle}>
-                                    配置
-                                </Text>
+                                <Flex justify='between' align='center'>
+                                    <Text style={styles.modalTitle}>
+                                        配置
+                                    </Text>
+
+                                    <Pressable onPress={() => chatStore.changeOpenAddon()}>
+                                        <View
+                                            style={{
+                                                marginRight: 5,
+                                                backgroundColor: '#fff',
+                                                borderRadius: 12,
+                                                zIndex: 100,
+                                                borderWidth: 0,
+                                            }}
+                                        >
+                                            <Image
+                                                source={require('../../assets/chat/close.png')}
+                                                style={{
+                                                    width: 24,
+                                                    height: 24,
+                                                }}
+                                            />
+                                        </View>
+                                    </Pressable>
+                                </Flex>
 
 
                                 <View style={styles.itemWrapper}>
@@ -93,10 +110,47 @@ class ChatApp extends React.Component<IProps, IState>{
 
                                     {/*文件预览列表*/}
                                     <View style={styles.uploadList}>
-                                        <ItemList
-                                            uploadList={chatStore.uploadList}
-                                            removeUploadList={chatStore.removeUploadList}
-                                        />
+                                        {
+                                            chatStore.uploadList.length === 0
+                                            ? (<View />)
+                                            : (chatStore.uploadList.map((item, index) => (
+                                                <View style={[styles.uploadFileWrapper, {}]} key={index}>
+                                                    {/*文件预览部分*/}
+                                                    <View style={{width: '100%', zIndex: 100}}>
+                                                        <Flex align='center' justify='start'>
+                                                            <Image
+                                                                source={require('../../assets/chat/file.png')}
+                                                                style={{width: 24, height: 24}}
+                                                            />
+                                                            <Text style={styles.uploadFileTitle}>{item.title}</Text>
+                                                        </Flex>
+                                                    </View>
+
+                                                    <Button
+                                                        onPress={() => chatStore.removeUploadList(item.id)}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            borderWidth: 0,
+                                                            borderRadius: 12,
+                                                            zIndex: 100,
+                                                        }}
+                                                        activeStyle={false}
+                                                        activeOpacity={1}
+                                                    >
+                                                        <Image
+                                                            source={require('../../assets/chat/delete.png')}
+                                                            style={{
+                                                                width: 14,
+                                                                height: 18,
+                                                                opacity: 0.8,
+                                                            }}
+                                                        />
+                                                    </Button>
+
+                                                </View>)
+                                            ))
+                                        }
                                     </View>
 
 
@@ -109,16 +163,13 @@ class ChatApp extends React.Component<IProps, IState>{
                                         >
                                             <Image source={require('../../assets/chat/upload.png')} style={styles.uploadIcon}/>
                                         </Button>
-
-                                        <Button onPress={() => chatStore.removeUploadList('111x')}>delete</Button>
                                     </View>
                                 </View>
-
 
                                 <Text>配图</Text>
                             </View>
                             <Button type="primary" onPress={this.handleOpenAddon}>
-                                change config
+                                修改配置
                             </Button>
 
                             <WhiteSpace size='xl'/>
@@ -225,6 +276,17 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
     },
+    uploadFileWrapper: {
+        backgroundColor: '#ffffff',
+        padding: 12,
+        width: '100%',
+        borderRadius: 16,
+        zIndex: 10,
+        position: 'relative',
+    },
+    uploadFileTitle: {
+        marginLeft: 6,
+    }
 })
 
 export default ChatApp;
