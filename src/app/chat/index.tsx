@@ -1,8 +1,9 @@
 import React, {useState} from "react";
-import {Button, Flex, InputItem, Modal, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
+import {Button, Card, Flex, Icon, InputItem, Modal, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
 import {inject, observer} from "mobx-react";
 import {IChatStore} from "../../mobx/chatStore";
 import {Image, ScrollView, StyleSheet} from "react-native";
+import ItemList from "./ItemList";
 
 interface IProps {
     chatStore: IChatStore;
@@ -71,25 +72,57 @@ class ChatApp extends React.Component<IProps, IState>{
                         popup
                         visible={true}
                         animationType="slide-up"
-                        onClose={this.handleOpenAddon}>
-                        <ScrollView>
-                            <WingBlank>
-                                <View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
-                                    <Text style={styles.modelTitle}>
-                                        配置
-                                    </Text>
-                                    <Text>
+                        onClose={this.handleOpenAddon}
+                        style={styles.modal}
+                    >
+                        <WingBlank>
+                            <View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
+
+                                <Text style={styles.modalTitle}>
+                                    配置
+                                </Text>
+
+
+                                <View style={styles.itemWrapper}>
+                                    <Text style={styles.secondTitle}>
                                         附件上传
                                     </Text>
-                                    <Text>配图</Text>
-                                </View>
-                                <Button type="primary" onPress={this.handleOpenAddon}>
-                                    change config
-                                </Button>
+                                    <Text style={styles.secondDesc}>
+                                        可以上传doc文档，在AI阅读理解的基础上进行问答或写作，支持多文本解析。
+                                    </Text>
 
-                                <WhiteSpace size='xl'/>
-                            </WingBlank>
-                        </ScrollView>
+                                    {/*文件预览列表*/}
+                                    <View style={styles.uploadList}>
+                                        <ItemList
+                                            uploadList={chatStore.uploadList}
+                                            removeUploadList={chatStore.removeUploadList}
+                                        />
+                                    </View>
+
+
+                                    {/*上传按钮*/}
+                                    <View style={styles.uploadButtonWrapper}>
+                                        <Button
+                                            activeStyle={false}
+                                            onPress={() => chatStore.addUploadList()}
+                                            style={{ borderRadius: 16 }}
+                                        >
+                                            <Image source={require('../../assets/chat/upload.png')} style={styles.uploadIcon}/>
+                                        </Button>
+
+                                        <Button onPress={() => chatStore.removeUploadList('111x')}>delete</Button>
+                                    </View>
+                                </View>
+
+
+                                <Text>配图</Text>
+                            </View>
+                            <Button type="primary" onPress={this.handleOpenAddon}>
+                                change config
+                            </Button>
+
+                            <WhiteSpace size='xl'/>
+                        </WingBlank>
                     </Modal>
 
                 </WingBlank>
@@ -155,8 +188,43 @@ const styles = StyleSheet.create({
         height: 24,
     },
     modal: {
-        width: '100%'
-    }
+        borderTopLeftRadius: 14,
+        borderTopRightRadius: 14,
+    },
+    modalTitle: {
+        fontSize: 26,
+        fontWeight: '600',
+        fontStyle: 'normal',
+        color: 'rgba(0,0,0,0.8)',
+    },
+    itemWrapper: {
+        marginTop: 30,
+        backgroundColor: 'rgba(158, 158,158, 0.15)',
+        padding: 20,
+        borderRadius: 18,
+    },
+    secondTitle: {
+        fontSize: 18,
+        fontWeight: '500',
+        fontStyle: 'normal',
+        color: 'rgba(0, 0, 0, 0.8)',
+    },
+    secondDesc: {
+        fontWeight: '400',
+        fontStyle: 'normal',
+        marginTop: 8,
+    },
+    uploadButtonWrapper: {
+        marginTop: 20,
+    },
+    uploadList: {
+        marginTop: 20,
+        width: '100%',
+    },
+    uploadIcon: {
+        width: 20,
+        height: 20,
+    },
 })
 
 export default ChatApp;
