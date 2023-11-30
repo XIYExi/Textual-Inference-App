@@ -31,7 +31,6 @@ type IStackRouterParams = {
     home: undefined;
     datadash: undefined;
     chat: undefined;
-    [key:string]: undefined;
 }
 
 

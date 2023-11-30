@@ -1,12 +1,17 @@
 import React, {useState} from "react";
-import {Button, Flex, InputItem, Modal, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
+import {Button, Flex, Modal, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
 import {inject, observer} from "mobx-react";
 import {IChatStore} from "../../mobx/chatStore";
-import {Image, StyleSheet, Button as RnButton, Pressable} from "react-native";
+import {Image, StyleSheet, Pressable} from "react-native";
+import Loading from "./component/loading";
+import ChatFooterInputApp from "./ChatFooterInputApp";
+import ChatHeaderApp from "./ChatHeaderApp";
+import ChatContainerApp from "./ChatContainerApp";
 
 interface IProps {
     chatStore: IChatStore;
 }
+
 
 interface IState {
     open: boolean;
@@ -27,41 +32,20 @@ class ChatApp extends React.Component<IProps, IState>{
 
     render() {
         const {chatStore} = this.props;
+
         return (
             <View>
                 <WingBlank style={styles.wrapper}>
                     {/*header*/}
-                    <Flex style={styles.header} justify="between">
-                        <Flex.Item>
-                            <Image source={require('../../assets/chat/back.png')} style={styles.backIcon}/>
-                        </Flex.Item>
-                        <Flex.Item>
-                            <Text style={styles.title}> ChattyAI</Text>
-                        </Flex.Item>
-                        <Flex.Item>
-                            <View style={styles.hiddenView}/>
-                        </Flex.Item>
-                    </Flex>
-                    <Button onPress={this.handleOpenAddon}>Open</Button>
-                    <Text>{chatStore.name}</Text>
+                    <ChatHeaderApp chatStore={chatStore}/>
 
+                    {/*对话主容器*/}
+                    <ChatContainerApp />
+
+                    <Loading loading={chatStore.loading} />
 
                     {/*输入框和button按钮*/}
-                    <Flex style={styles.inputWrapper} align='center'>
-                        <View style={styles.inputs}>
-                            <InputItem
-                                onChange={(value: any) => {}}
-                                placeholder="问我任何事..."
-                                type='text'
-                            />
-                        </View>
-                        <Button style={styles.button} activeStyle={{backgroundColor: '#17CE92',opacity: 0.8}}>
-                            <Image
-                                source={require('../../assets/chat/submit.png')}
-                                style={styles.submitIcon}
-                            />
-                        </Button>
-                    </Flex>
+                    <ChatFooterInputApp />
 
                     <Modal
                         popup
@@ -153,7 +137,6 @@ class ChatApp extends React.Component<IProps, IState>{
                                         }
                                     </View>
 
-
                                     {/*上传按钮*/}
                                     <View style={styles.uploadButtonWrapper}>
                                         <Button
@@ -187,56 +170,6 @@ const styles = StyleSheet.create({
     wrapper: {
         height: '100%',
         position: 'relative',
-    },
-    header: {
-        padding: 10,
-    },
-    backIcon: {
-        width: 28,
-        height: 28
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: '500',
-        textAlign: 'center',
-        color: '#212121',
-        lineHeight: 64,
-    },
-    hiddenView: {
-        width:28,
-        height:28,
-    },
-    inputWrapper: {
-        width: '100%',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        marginBottom: 24,
-    },
-    inputs: {
-        width: '80%',
-        backgroundColor: 'rgba(158, 158,158, 0.1)',
-        borderRadius: 16,
-        gap: 12,
-        alignItems: 'center',
-    },
-    buttonWrapper: {
-        width: '20%',
-    },
-    button: {
-        width: 52,
-        height: 52,
-        borderRadius: 100,
-        backgroundColor: '#17CE92',
-        gap: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 10,
-        marginLeft: 10,
-    },
-    submitIcon: {
-        width: 24,
-        height: 24,
     },
     modal: {
         borderTopLeftRadius: 14,
@@ -283,6 +216,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         zIndex: 10,
         position: 'relative',
+        marginTop: 10,
     },
     uploadFileTitle: {
         marginLeft: 6,
