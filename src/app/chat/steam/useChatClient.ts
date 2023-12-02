@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
-import { StreamChat } from 'stream-chat';
-import {chatApiKey, chatApiSecret, chatUserId, chatUserName, chatUserToken} from './chatConfig';
+import { chatClient, chatUserId, chatUserName, chatUserToken} from './chatConfig';
 
 const user = {
     id: chatUserId,
     name: chatUserName,
 };
 
-const chatClient = StreamChat.getInstance(chatApiKey, chatApiSecret);
+// export const chatClient = StreamChat.getInstance(chatApiKey, chatApiSecret);
 
 export const useChatClient = () => {
     /*是否读取*/
@@ -16,8 +15,9 @@ export const useChatClient = () => {
     useEffect(() => {
         const setupClient = async () => {
             try {
+                const answer = await chatClient.connectUser(user, chatUserToken);
+                console.log('useChatClient wait connect... : -> ', answer)
 
-                await chatClient.connectUser(user, chatUserToken);
                 setClientIsReady(true);
 
                 // connectUser is an async function. So you can choose to await for it or not depending on your use case (e.g. to show custom loading indicator)
@@ -35,6 +35,7 @@ export const useChatClient = () => {
         // and we can skip trying to connect the user again.
         if (!chatClient.userID) {
             setupClient();
+            // console.log(chatClient.userID)
         }
     }, []);
 

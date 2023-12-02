@@ -1,12 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import { SafeAreaView,} from 'react-native';
 import { Provider } from 'mobx-react';
 import {stores} from "./src/mobx";
@@ -22,9 +14,14 @@ import {
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 import { OverlayProvider, Chat } from 'stream-chat-react-native';
 import {AppProvider} from "./src/AppContext";
-import {StreamChat} from "stream-chat";
-import {chatApiKey} from "./src/app/chat/steam/chatConfig";
+import { chatClient } from "./src/app/chat/steam/chatConfig";
+import {SafeAreaProvider} from "react-native-safe-area-context";
 import ChatListApp from "./src/app/chatlist";
+import ThreadScreen from "./src/app/thread";
+import {useChatClient} from "./src/app/chat/steam/useChatClient";
+import {SearchContextProvider} from "./src/SearchContext";
+import {NewMessageProvider} from "./src/NewMessageContext";
+import {Apps} from "./src/app/Apps";
 
 
 type IStackRouterParams = {
@@ -32,39 +29,50 @@ type IStackRouterParams = {
     datadash: undefined;
     chat: undefined;
     chatlist: undefined;
+    threadscreen: undefined;
 }
 
 
 const Stack = createNativeStackNavigator<IStackRouterParams>();
-const chatClient = StreamChat.getInstance(chatApiKey);
 
 function App(): JSX.Element {
+    const {clientIsReady} = useChatClient();
+    console.log('app begin clientIsReady ? -> ', clientIsReady)
 
+    // console.log('start app... chatClient is : ->', chatClient)
   return (
-      <AppProvider>
-          <AntdRnProvider>
-              <Provider {...stores}>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                      <SafeAreaView style={{ flex: 1 }}>
-                          <OverlayProvider>
-                              <Chat client={chatClient}>
-                                  <NavigationContainer>
-                                      <Stack.Navigator initialRouteName='chat'>
-                                          <Stack.Screen name='home' component={HomePageApp} options={{ headerShown: false }}/>
-                                          <Stack.Screen name='datadash' component={DatadashApp} />
-                                          <Stack.Screen name='chat' component={ChatApp} options={{ headerShown: false }}/>
-                                          <Stack.Screen name='chatlist' component={ChatListApp} />
-                                      </Stack.Navigator>
-                                  </NavigationContainer>
-                              </Chat>
-                          </OverlayProvider>
-                      </SafeAreaView>
-                  </GestureHandlerRootView>
-              </Provider>
-          </AntdRnProvider>
-      </AppProvider>
-
-
+      <SafeAreaProvider>
+          <NavigationContainer>
+              <AppProvider>
+                  <SearchContextProvider>
+                      <AntdRnProvider>
+                      <Provider {...stores}>
+                          <GestureHandlerRootView style={{ flex: 1 }}>
+                              <SafeAreaView style={{ flex: 1 }}>
+                                  <OverlayProvider>
+                                      { clientIsReady && (
+                                          <NewMessageProvider>
+                                              <Chat client={chatClient}>
+                                                  {/*<Stack.Navigator initialRouteName='chatlist'>
+                                                      <Stack.Screen name='home' component={HomePageApp} options={{ headerShown: false }}/>
+                                                      <Stack.Screen name='datadash' component={DatadashApp} />
+                                                      <Stack.Screen name='chatlist' component={ChatListApp} />
+                                                      <Stack.Screen name='chat' component={ChatApp} options={{ headerShown: false }}/>
+                                                      <Stack.Screen name='threadscreen' component={ThreadScreen} />
+                                                  </Stack.Navigator>*/}
+                                                  <Apps />
+                                              </Chat>
+                                          </NewMessageProvider>
+                                      ) }
+                                  </OverlayProvider>
+                              </SafeAreaView>
+                          </GestureHandlerRootView>
+                      </Provider>
+                  </AntdRnProvider>
+                  </SearchContextProvider>
+              </AppProvider>
+          </NavigationContainer>
+      </SafeAreaProvider>
   );
 }
 

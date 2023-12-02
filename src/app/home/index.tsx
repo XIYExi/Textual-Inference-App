@@ -3,69 +3,65 @@ import {inject, observer} from "mobx-react";
 import {IHomeStore} from "../../mobx/homeStore";
 import {Button, Flex, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
 import {Image, StyleSheet} from "react-native";
-
-interface IProps {
-    homeStore?: IHomeStore;
-}
-
-interface IState {}
-
-@inject('homeStore')
-@observer
-class HomePageApp extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-    }
+import {useNavigation} from "@react-navigation/native";
 
 
-    render(){
-        const {homeStore} = this.props;
-        return (
-            <View>
-                <WingBlank>
-                    {/*header*/}
-                    <Flex style={styles.header} justify="between">
-                        <Flex.Item>
-                            <Image source={require('../../assets/home/icon.png')} style={styles.icon}/>
-                        </Flex.Item>
-                        <Flex.Item>
-                            <Text style={styles.title}>ChattyAI</Text>
-                        </Flex.Item>
-                        <Flex.Item>
-                            {/*标题最后占位用的div块，用于flex-between局部将title居中*/}
-                            <View style={styles.hiddenView}/>
-                        </Flex.Item>
-                    </Flex>
+function HomePageApp() {
 
-                    {/*container*/}
-                    <View style={styles.container}>
+    const navigation = useNavigation();
 
-                        <WhiteSpace size='xl'/>
+    return (
+        <View>
+            <WingBlank>
+                {/*header*/}
+                <Flex style={styles.header} justify="between">
+                    <Flex.Item>
+                        <Image source={require('../../assets/home/icon.png')} style={styles.icon}/>
+                    </Flex.Item>
+                    <Flex.Item>
+                        <Text style={styles.title}>ChattyAI</Text>
+                    </Flex.Item>
+                    <Flex.Item>
+                        {/*标题最后占位用的div块，用于flex-between局部将title居中*/}
+                        <View style={styles.hiddenView}/>
+                    </Flex.Item>
+                </Flex>
 
-                        <Image source={require('../../assets/home/bigIcon.png')} style={styles.containerIcon}/>
+                {/*container*/}
+                <View style={styles.container}>
 
-                        <View style={styles.containerCtx}>
-                            <Text style={styles.containerCtxPrimary}>欢迎来到</Text>
-                            <Text style={styles.containerCtxSecondary}>ChattyAI 👋</Text>
-                            <Text style={styles.containerCtxDesc}>
-                                现在就开始和ChattyAI聊天吧。
-                                你可以问我任何问题。
-                            </Text>
-                        </View>
+                    <WhiteSpace size='xl'/>
 
+                    <Image source={require('../../assets/home/bigIcon.png')} style={styles.containerIcon}/>
 
-
-                        <Button style={styles.button} activeStyle={{backgroundColor: '#17CE92',opacity: 0.8}}>
-                            <Text style={styles.buttonText}>开始使用</Text>
-                        </Button>
-
+                    <View style={styles.containerCtx}>
+                        <Text style={styles.containerCtxPrimary}>欢迎来到</Text>
+                        <Text style={styles.containerCtxSecondary}>ChattyAI 👋</Text>
+                        <Text style={styles.containerCtxDesc}>
+                            现在就开始和ChattyAI聊天吧。
+                            你可以问我任何问题。
+                        </Text>
                     </View>
 
-                </WingBlank>
-            </View>
 
-        )
-    }
+
+                    <Button
+                        style={styles.button}
+                        activeStyle={{backgroundColor: '#17CE92',opacity: 0.8}}
+                        onPress={() => {
+                            // console.log('hello')
+                            navigation.navigate('Main')
+                        }}
+                    >
+                        <Text style={styles.buttonText}>开始使用</Text>
+                    </Button>
+
+                </View>
+
+            </WingBlank>
+        </View>
+    )
+
 }
 
 const styles = StyleSheet.create({
