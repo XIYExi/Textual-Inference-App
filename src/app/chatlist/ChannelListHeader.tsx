@@ -6,10 +6,8 @@ import {
     TouchableOpacity,
     Text,
 } from 'react-native';
-
 import {Search, useTheme, CircleClose} from 'stream-chat-react-native';
 import {useNavigation} from '@react-navigation/native';
-
 import {SearchContext} from "../../SearchContext";
 import {Compose} from "../../components/Compose";
 import {Flex} from "@ant-design/react-native";
@@ -95,6 +93,7 @@ export const ChannelListHeader = () => {
                     marginTop: 14,
                 }}
             >
+                {/*搜索条*/}
                 <View style={[
                         styles.searchContainer,
                         {
@@ -120,6 +119,7 @@ export const ChannelListHeader = () => {
                     )}
                 </View>
 
+                {/*新建对话*/}
                 <View>
                     <TouchableOpacity onPress={onClickNewMessage}>
                         <Compose height={30} width={30} pathFill={accent_blue} />

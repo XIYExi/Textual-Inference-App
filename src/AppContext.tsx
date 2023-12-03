@@ -27,8 +27,6 @@ export const AppProvider = (props: {children: ReactNode}) => {
     const [state, setState] = useState<State>({});
     const {channel, messageId} = state;
 
-
-
     const setChannelWithId = useCallback(
         async (channelId: string, innerMessageId?: string) => {
             const newChannel = chatClient?.channel('messaging', channelId);

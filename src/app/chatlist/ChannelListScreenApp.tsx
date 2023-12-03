@@ -1,6 +1,6 @@
 import React, {useCallback, useContext} from "react";
 import {ChannelList, Search, useTheme} from "stream-chat-react-native";
-import {chatUserId, StreamChatGenerics} from "../chat/steam/chatConfig";
+import {chatClient, chatUserId, StreamChatGenerics} from "../chat/steam/chatConfig";
 import {useAppContext} from "../../AppContext";
 import {View, Text} from "@ant-design/react-native";
 import {ChannelSort} from "stream-chat";

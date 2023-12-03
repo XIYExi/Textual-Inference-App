@@ -1,4 +1,4 @@
-import {useContext, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {MessageFilters, MessageResponse} from 'stream-chat';
 
 import {useAppContext} from "../AppContext";

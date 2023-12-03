@@ -50,6 +50,7 @@ function HomePageApp() {
                         activeStyle={{backgroundColor: '#17CE92',opacity: 0.8}}
                         onPress={() => {
                             // console.log('hello')
+                            // @ts-ignore
                             navigation.navigate('Main')
                         }}
                     >

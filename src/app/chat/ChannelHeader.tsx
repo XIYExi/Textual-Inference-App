@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, View, TouchableWithoutFeedback} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, TouchableWithoutFeedback, Image, Pressable} from 'react-native';
 import {isOwnUser} from 'stream-chat';
 import {
     ChannelAvatar,
@@ -7,12 +7,13 @@ import {
     useTheme,
 } from 'stream-chat-react-native';
 import type {Channel as ChannelType} from 'stream-chat';
-
-
 import {NavigationParamsList} from "../Apps";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {useAppContext} from "../../AppContext";
 import {BackButton} from "../../components/BackButton";
+import {Flex} from "@ant-design/react-native";
+import {inject, observer} from "mobx-react";
+import {IChatStore} from "../../mobx/chatStore";
 
 export const CHANNEL_SCREEN_HEADER_HEIGHT = 80;
 
@@ -54,9 +55,10 @@ const styles = StyleSheet.create({
 export type ChannelHeader = {
     channel?: ChannelType;
     navigation: NativeStackNavigationProp<NavigationParamsList, 'Main'>;
+    chatStore:IChatStore;
 };
 
-export const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,}) => {
+const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,chatStore}) => {
     const displayName = useChannelPreviewDisplayName(channel);
     const {chatClient} = useAppContext();
     const [count, setCount] = useState<number>();
@@ -104,10 +106,27 @@ export const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,}) =
                         </TouchableWithoutFeedback>
                     </View>
                     {channel && <ChannelAvatar channel={channel} />}
-                    <View style={styles.rightContainer} />
+                    <Flex style={styles.rightContainer} justify='end'>
+                        <View style={{marginRight: 20}}>
+                            <Pressable onPress={() => chatStore.changeOpenAddon()}>
+                                <View>
+                                    <Image
+                                        source={require('../../assets/chat/config.png')}
+                                        style={{
+                                            width: 20,
+                                            height: 20,
+                                        }}
+                                    />
+                                </View>
+                            </Pressable>
+                        </View>
+                    </Flex>
                 </View>
                 <Text style={[styles.text]}>{displayName}</Text>
             </View>
         </>
     );
-};
+}
+
+
+export default inject('chatStore')(observer(ChannelHeader));
