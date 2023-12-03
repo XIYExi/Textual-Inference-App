@@ -31,9 +31,7 @@ function HomePageApp() {
                 <View style={styles.container}>
 
                     <WhiteSpace size='xl'/>
-
                     <Image source={require('../../assets/home/bigIcon.png')} style={styles.containerIcon}/>
-
                     <View style={styles.containerCtx}>
                         <Text style={styles.containerCtxPrimary}>欢迎来到</Text>
                         <Text style={styles.containerCtxSecondary}>ChattyAI 👋</Text>
@@ -42,8 +40,6 @@ function HomePageApp() {
                             你可以问我任何问题。
                         </Text>
                     </View>
-
-
 
                     <Button
                         style={styles.button}

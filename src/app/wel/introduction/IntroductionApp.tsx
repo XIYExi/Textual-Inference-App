@@ -1,111 +1,119 @@
-import {Button, Carousel, Flex, Text, View} from "@ant-design/react-native";
-import {StyleSheet} from "react-native";
-import {useRef, useState} from "react";
-import IntroductionPage1App from "./IntroductionPage1App";
-import IntroductionPage2App from "./IntroductionPage2App";
-import IntroductionPage3App from "./IntroductionPage3App";
+import {Text, View} from "@ant-design/react-native";
+import {Dimensions, StyleSheet, TouchableOpacity} from "react-native";
+import Lottie from 'lottie-react-native';
 import {useNavigation} from "@react-navigation/native";
+import Onboarding from 'react-native-onboarding-swiper';
+import {setItem} from "../../../utils/asyncStorage";
+
+const {width, height} = Dimensions.get('window');
 
 function IntroductionApp() {
 
-    const [page, setPage] = useState(0); // page only in [1, 2, 3]
-
-    const carouselRef = useRef(null);
     const navigation = useNavigation();
 
-    return (
-        <View style={{position: 'relative', height: '100%', backgroundColor: '#fff'}}>
-            <View style={styles.content}>
-                <Carousel
-                    style={{
-                        width: '100%',
-                        height: 520,
-                    }}
-                    selectedIndex={page}
-                    autoplay={false}
-                    infinite={false}
-                    dotStyle={{
-                        width: 20,
-                        marginRight: 5,
-                        marginLeft: 5,
-                    }}
-                    dotActiveStyle={{
-                        backgroundColor: '#17CE92',
-                    }}
-                    ref={carouselRef}
-                >
-                    <IntroductionPage1App />
-                    <IntroductionPage2App />
-                    <IntroductionPage3App />
-                </Carousel>
-            </View>
+    const doneButton = ({...props})=>{
+        return (
+            <TouchableOpacity style={styles.doneButton} {...props}>
+                <Text>完成</Text>
+            </TouchableOpacity>
+        )
+    }
 
-            <View style={styles.footer}>
-                <Flex justify='center' align='center'>
-                    <Button style={[styles.btn, {
-                        backgroundColor: '#E8FAF4',
-                        marginRight: 20
-                    }]}
-                            onPress={() => {
-                                // @ts-ignore
-                                navigation.navigate('Welcome')
-                            }}
-                    >
-                        <Text style={[styles.btnText, {
-                            color: '#17CE92'
-                        }]}>跳过</Text>
-                    </Button>
-                    <Button style={[styles.btn, {backgroundColor: '#17CE92'}]}
-                            onPress={() => {
-                                if (page !== 2) {
-                                    // @ts-ignore
-                                    carouselRef.current.goTo(page + 1);
-                                    setPage(prevState => prevState + 1);
-                                }
-                                else{
-                                    // @ts-ignore
-                                    navigation.navigate('Welcome');
-                                }
-                            }}
-                    >
-                        <Text style={[styles.btnText, {
-                            color: '#fff'
-                        }]}>下一步</Text>
-                    </Button>
-                </Flex>
-            </View>
+    const skipButton =  ({...props})=>{
+        return (
+            <TouchableOpacity style={styles.doneButton} {...props}>
+                <Text>跳过</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    const nextButton =  ({...props})=>{
+        return (
+            <TouchableOpacity style={styles.doneButton} {...props}>
+                <Text>下一步</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    const handleDone = async () => {
+
+        await setItem('introduction', '1');
+        //@ts-ignore
+        navigation.navigate('Welcome');
+    }
+
+    return (
+        <View style={styles.container}>
+            <Onboarding
+                bottomBarHighlight={false}
+                DoneButtonComponent={doneButton}
+                SkipButtonComponent={skipButton}
+                NextButtonComponent={nextButton}
+                onSkip={handleDone}
+                onDone={handleDone}
+                containerStyles={{paddingHorizontal: 15}}
+                pages={[
+                    {
+                        backgroundColor: '#a7f3d0',
+                        image:(
+                            <View style={styles.lottie1}>
+                                <Lottie source={require('../../../assets/welcome/wel1.json')} autoPlay loop/>
+                            </View>
+                        ) ,
+                        title: '智能AI写作助手解放你的双手',
+                        subtitle: '使用预构建的自然语言理解模型，解析理解传递文档内容，这款应用可以帮助提高写作效率。',
+                    },
+                    {
+                        backgroundColor: '#fef3c7',
+                        image:(
+                            <View style={styles.lottie2}>
+                                <Lottie source={require('../../../assets/welcome/wel2.json')} autoPlay loop/>
+                            </View>
+                        ) ,
+                        title: '生成式机器阅读理解拓展你的思维',
+                        subtitle: '跳出文本的束缚，在模型理解文本的基础上，生成答案，通过对话问答的形式获得想要的内容。',
+                    },
+                    {
+                        backgroundColor: '#a78bfa',
+                        image:(
+                            <View style={styles.lottie3}>
+                                <Lottie source={require('../../../assets/welcome/wel3.json')} autoPlay loop/>
+                            </View>
+                        ) ,
+                        title: '多端多平台使用',
+                        subtitle: '应用登录IOS，Android，PC，可以尝试官网API调用服务。',
+                    },
+                ]}
+            />
         </View>
     )
 }
 
 
 const styles = StyleSheet.create({
-    content: {
-        width: '100%',
-
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        marginTop: -40
     },
-    footer: {
-        width: '100%',
-        position:'absolute',
-        bottom: 0,
-        left: 0,
-        paddingTop: 24,
-        paddingBottom: 36,
+    lottie1: {
+        width: width* 0.9,
+        height: height * 0.43,
     },
-    btn:{
-        width: '45%',
-        borderRadius: 100,
-        borderWidth: 0,
-        paddingRight: 16,
-        paddingLeft: 16,
-        gap: 10,
-        textAlign: 'center',
-        justifyContent: 'center',
+    lottie2: {
+        width: width* 0.9,
+        height: height * 0.5,
     },
-    btnText: {
-        textAlign: 'center',
-        fontStyle: 'normal',
+    lottie3: {
+        width: width* 0.9,
+        height: height * 0.45,
     },
+    doneButton: {
+        padding: 20,
+        // backgroundColor: 'white',
+        // borderTopLeftRadius: '100%',
+        // borderBottomLeftRadius: '100%'
+    }
 })
 
 

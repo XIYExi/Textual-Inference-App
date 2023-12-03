@@ -1,14 +1,27 @@
 import {Button, Flex, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
-import {Image, StyleSheet} from "react-native";
+import {Image, StyleSheet, TouchableOpacity} from "react-native";
+import {removeItem} from "../../../utils/asyncStorage";
+import {useNavigation} from "@react-navigation/native";
 
 function WelcomeApp() {
 
+    const navigation = useNavigation();
+
+    const tutor = async () => {
+        await removeItem('introduction');
+        // @ts-ignore
+        navigation.navigate('Introduction');
+    }
 
     return (
         <WingBlank>
             <WhiteSpace size='xl'/>
             <WhiteSpace size='xl'/>
             <WhiteSpace size='xl'/>
+
+            <TouchableOpacity style={{padding: 20}} onPress={tutor}>
+                <Text>完成</Text>
+            </TouchableOpacity>
 
             {/*Login Container Begin*/}
             <Flex style={styles.LoginContainer} justify='center' direction='column'>

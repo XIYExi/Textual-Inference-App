@@ -18,6 +18,8 @@ import {useChatClient} from "./chat/steam/useChatClient";
 import LoadingApp from "./loading/LoadingApp";
 import WelcomeApp from "./wel/welcome/WelcomeApp";
 import IntroductionApp from "./wel/introduction/IntroductionApp";
+import {useEffect, useState} from "react";
+import {getItem} from "../utils/asyncStorage";
 
 
 const MainStack = createNativeStackNavigator();
@@ -49,12 +51,44 @@ export type NavigationParamsList = {
 
 const WelStackScreen = () => {
 
-    return (
-        <WelStack.Navigator initialRouteName='Introduction'>
-            <WelStack.Screen name='Introduction' component={IntroductionApp} options={{headerShown: false}}/>
-            <WelStack.Screen name='Welcome' component={WelcomeApp} options={{headerShown: false}}/>
-        </WelStack.Navigator>
-    )
+    const [showIntroduction, setShowIntroduction] = useState<any>(null);
+    useEffect(() => {
+        checkIfAlreadyIntroduction();
+    }, [])
+
+    const checkIfAlreadyIntroduction = async () => {
+        let intro = await getItem('introduction');
+        console.log('intro: ->', intro)
+        if (intro === '1') {
+            // hidden
+            setShowIntroduction(false);
+        }
+        else {
+            // show
+            setShowIntroduction(true);
+        }
+    }
+
+    if(showIntroduction === null){
+        return null;
+    }
+
+    if (showIntroduction) {
+        return (
+            <WelStack.Navigator initialRouteName='Introduction'>
+                <WelStack.Screen name='Introduction' component={IntroductionApp} options={{headerShown: false}}/>
+                <WelStack.Screen name='Welcome' component={WelcomeApp} options={{headerShown: false}}/>
+            </WelStack.Navigator>
+        )
+    }
+    else {
+        return (
+            <WelStack.Navigator initialRouteName='Welcome'>
+                <WelStack.Screen name='Introduction' component={IntroductionApp} options={{headerShown: false}}/>
+                <WelStack.Screen name='Welcome' component={WelcomeApp} options={{headerShown: false}}/>
+            </WelStack.Navigator>
+        )
+    }
 }
 
 

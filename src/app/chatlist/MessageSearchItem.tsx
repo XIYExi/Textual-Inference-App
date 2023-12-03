@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Avatar, useTheme } from 'stream-chat-react-native';
 import type {MessageResponse} from 'stream-chat';
 
-import {formatLatestMessageDate} from "../../utils";
+import {formatLatestMessageDate} from "../../utils/utils";
 import {Right} from "../../components/Right";
 
 const styles = StyleSheet.create({
