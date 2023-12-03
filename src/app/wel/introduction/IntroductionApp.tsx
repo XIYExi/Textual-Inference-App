@@ -1,17 +1,20 @@
-import {Button, Carousel, Flex, Text, View, WingBlank} from "@ant-design/react-native";
+import {Button, Carousel, Flex, Text, View} from "@ant-design/react-native";
 import {StyleSheet} from "react-native";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import IntroductionPage1App from "./IntroductionPage1App";
 import IntroductionPage2App from "./IntroductionPage2App";
 import IntroductionPage3App from "./IntroductionPage3App";
+import {useNavigation} from "@react-navigation/native";
 
 function IntroductionApp() {
 
     const [page, setPage] = useState(0); // page only in [1, 2, 3]
 
+    const carouselRef = useRef(null);
+    const navigation = useNavigation();
 
     return (
-        <View style={{position: 'relative', height: '100%'}}>
+        <View style={{position: 'relative', height: '100%', backgroundColor: '#fff'}}>
             <View style={styles.content}>
                 <Carousel
                     style={{
@@ -29,6 +32,7 @@ function IntroductionApp() {
                     dotActiveStyle={{
                         backgroundColor: '#17CE92',
                     }}
+                    ref={carouselRef}
                 >
                     <IntroductionPage1App />
                     <IntroductionPage2App />
@@ -41,12 +45,29 @@ function IntroductionApp() {
                     <Button style={[styles.btn, {
                         backgroundColor: '#E8FAF4',
                         marginRight: 20
-                    }]}>
+                    }]}
+                            onPress={() => {
+                                // @ts-ignore
+                                navigation.navigate('Welcome')
+                            }}
+                    >
                         <Text style={[styles.btnText, {
                             color: '#17CE92'
                         }]}>跳过</Text>
                     </Button>
-                    <Button style={[styles.btn, {backgroundColor: '#17CE92'}]}>
+                    <Button style={[styles.btn, {backgroundColor: '#17CE92'}]}
+                            onPress={() => {
+                                if (page !== 2) {
+                                    // @ts-ignore
+                                    carouselRef.current.goTo(page + 1);
+                                    setPage(prevState => prevState + 1);
+                                }
+                                else{
+                                    // @ts-ignore
+                                    navigation.navigate('Welcome');
+                                }
+                            }}
+                    >
                         <Text style={[styles.btnText, {
                             color: '#fff'
                         }]}>下一步</Text>
