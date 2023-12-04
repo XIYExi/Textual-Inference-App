@@ -12,20 +12,25 @@ import {Channel, useTheme} from 'stream-chat-react-native';
 import {CHANNEL_LIST_SCREEN_HEADER_HEIGHT, ChannelListHeader} from "./chatlist/ChannelListHeader";
 import ChannelListScreenApp from "./chatlist/ChannelListScreenApp";
 import ApiApp from "./api/ApiApp";
-import LoginApp from "./login/LoginApp";
-import RegisterApp from "./register/RegisterApp";
+import LoginApp from "./auth/login/LoginApp";
+import RegisterApp from "./auth/register/RegisterApp";
 import {useChatClient} from "./chat/steam/useChatClient";
 import LoadingApp from "./loading/LoadingApp";
 import WelcomeApp from "./wel/welcome/WelcomeApp";
 import IntroductionApp from "./wel/introduction/IntroductionApp";
 import {useEffect, useState} from "react";
 import {getItem} from "../utils/asyncStorage";
+import AuthEmail from "./auth/forget/authEmail/AuthEmail";
+import AuthOTP from "./auth/forget/authOTP/AuthOTP";
+import ChangePWD from "./auth/forget/changePWD/ChangePWD";
+import FillinApp from "./auth/fillin/FillinApp";
 
 
 const MainStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
-const AuthStack = createNativeStackNavigator();
 const WelStack = createNativeStackNavigator();
+const ForgetStack = createNativeStackNavigator();
+
 
 // Navigation types
 export type NavigationParamsList = {
@@ -34,6 +39,9 @@ export type NavigationParamsList = {
         Welcome: undefined;
     }>;
     Home: undefined;
+    Login: undefined;
+    Register: undefined;
+    Fillin: undefined;
     Api: undefined;
     Datadash: undefined;
     Main: NavigatorScreenParams<{
@@ -42,9 +50,10 @@ export type NavigationParamsList = {
         Loading: undefined;
     }>;
     NewMessage: undefined;
-    Auth: NavigatorScreenParams<{
-        Login: undefined;
-        Register: undefined;
+    Forget: NavigatorScreenParams<{
+        AuthEmail: undefined;
+        AuthOTP: undefined;
+        ChangePWD: undefined;
     }>
 };
 
@@ -177,20 +186,25 @@ const MainStackScreen = () => {
     )
 }
 
-
-const AuthStackScreen = () => {
-
+const ForgetStackScreen = () => {
     return (
-        <AuthStack.Navigator
-            initialRouteName='Login'
-        >
-            <AuthStack.Screen
-                name='Login'
-                component={LoginApp}
+        <ForgetStack.Navigator initialRouteName='AuthEmail'>
+            <ForgetStack.Screen
+                name='AuthEmail'
+                component={AuthEmail}
                 options={{headerShown: false}}
             />
-            <AuthStack.Screen name='Register' component={RegisterApp}/>
-        </AuthStack.Navigator>
+            <ForgetStack.Screen
+                name='AuthOTP'
+                component={AuthOTP}
+                options={{headerShown: false}}
+            />
+            <ForgetStack.Screen
+                name='ChangePWD'
+                component={ChangePWD}
+                options={{headerShown: false}}
+            />
+        </ForgetStack.Navigator>
     )
 }
 
@@ -208,8 +222,23 @@ export const Apps = () => {
                 options={{headerShown: false}}
             />
             <RootStack.Screen
-                name='Auth'
-                component={AuthStackScreen}
+                name='Login'
+                component={LoginApp}
+                options={{headerShown: false}}
+            />
+            <RootStack.Screen
+                name='Register'
+                component={RegisterApp}
+                options={{headerShown: false}}
+            />
+            <RootStack.Screen
+                name='Fillin'
+                component={FillinApp}
+                options={{headerShown: false}}
+            />
+            <RootStack.Screen
+                name='Forget'
+                component={ForgetStackScreen}
                 options={{headerShown: false}}
             />
             <RootStack.Screen

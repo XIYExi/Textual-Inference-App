@@ -19,8 +19,13 @@ function WelcomeApp() {
             <WhiteSpace size='xl'/>
             <WhiteSpace size='xl'/>
 
-            <TouchableOpacity style={{padding: 20}} onPress={tutor}>
-                <Text>完成</Text>
+            <TouchableOpacity style={{
+                padding: 20,
+                position: 'absolute',
+                top: 0,
+                right: 0,
+            }} onPress={tutor}>
+                <Text>指导</Text>
             </TouchableOpacity>
 
             {/*Login Container Begin*/}
@@ -37,10 +42,16 @@ function WelcomeApp() {
 
             {/*Login Form*/}
             <View style={{marginTop: 35, zIndex: 100,}}>
-                <Button style={styles.loginBtn} onPress={() => console.log('Login...')}>
+                <Button style={styles.loginBtn} onPress={() => {
+                    //@ts-ignore
+                    navigation.navigate('Login');
+                }} >
                     <Text style={{color: '#fff'}}>登录</Text>
                 </Button>
-                <Button style={styles.registerBtn} onPress={() => console.log('Register...')}>
+                <Button style={styles.registerBtn} onPress={() => {
+                    //@ts-ignore
+                    navigation.navigate('Register');
+                }}>
                     <Text style={{color: '#17CE92'}}>注册</Text>
                 </Button>
             </View>
