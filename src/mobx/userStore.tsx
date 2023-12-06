@@ -14,6 +14,8 @@ interface IUserStore {
 
     storeUser: (param: any) => void;
     storeSetting: (param: any) => void;
+    changeSettingMode: (param:string) => void;
+    changeSettingLanguage:(para:string) => void;
 }
 
 class UserStore implements IUserStore {
@@ -45,6 +47,14 @@ class UserStore implements IUserStore {
         this.settingId = settingId;
         this.language = language;
         this.mode = mode;
+    }
+
+    changeSettingMode(mode:string) {
+        this.mode = mode;
+    }
+
+    changeSettingLanguage(language:string) {
+        this.language = language;
     }
 
 }

@@ -1,4 +1,4 @@
-import {Flex, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
+import {Flex, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
 import {Image, Pressable, StyleSheet, TouchableOpacity} from "react-native";
 import React, {useEffect, useState} from "react";
 import {inject, observer} from "mobx-react";
@@ -6,6 +6,7 @@ import {IUserStore} from "../../mobx/userStore";
 import ThemeText from "../../components/ThemeText";
 import ThemeView from "../../components/ThemeView";
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useThemeContext} from "../../themeContext";
 
 interface IUserApp {
     userStore: IUserStore;
@@ -14,16 +15,35 @@ interface IUserApp {
 function UserApp(props:IUserApp) {
 
     const {userStore} = props;
+    const themeCtx = useThemeContext();
+
 
     const [modeModalOpen, setModeModalOpen] = useState(false);
-    const [modeModalValue, setModeModalValue] = useState(['Light']);
+    const [modeModalValue, setModeModalValue] = useState('Light');
     const [items, setItems] = useState([
         {label: '明亮模式', value: 'Light'},
         {label: '黑暗模式', value: 'Dark'},
     ]);
+    const handleModeValueChange = (value:any) => {
+        // console.log("mode changed: -> ", value)
+        // 只有value发生改变才会出发，如果两次选择相同则不会出发，此回调可以保证值一定被修改
+        // value只有两种取值 Light 和 Dark，符合前后端存储规则，可以直接塞到mobx中
+        userStore.changeSettingMode(value);
+        themeCtx.setMode(value); // 修改上下文，这里是为了给NavigationContainer传值
+    }
 
+
+    const [languageModalOpen, setLanguageModalOpen] = useState(false);
+    const [languageModalValue, setLanguageModalValue] = useState('zh');
+    const [languageItems, setLanguageItems] = useState([
+        {label: '简体中文', value: 'zh'},
+        {label: 'English', value: 'en'},
+    ])
+
+
+    // 初始化用于从mobx中提取用户信息并写入到配置中
     useEffect(() => {
-        setModeModalValue([userStore.mode]);
+        setModeModalValue(userStore.mode);
     }, [userStore])
 
 
@@ -56,23 +76,53 @@ function UserApp(props:IUserApp) {
 
                 <ThemeText style={{marginTop: 24}}>设置</ThemeText>
 
-                <Flex>
-                    <Image source={require('../../assets/user/user.png')} />
+                {/*个人信息预览*/}
+                <Flex style={styles.settingFlexItem} align='center'>
+                    <Image source={
+                        userStore.mode === 'Light'
+                            ? require('../../assets/user/user_l.png')
+                            : require('../../assets/user/user_d.png')
+                    } style={styles.settingIcon}/>
                     <ThemeText>个人信息</ThemeText>
                 </Flex>
 
-                <Flex>
-                    <Image source={require('../../assets/user/language.png')} />
-                    <ThemeText>语言</ThemeText>
-                    <ThemeText>{userStore?.language}</ThemeText>
+                {/* i18n国际化 */}
+                <Flex justify='between' style={styles.settingFlexItem} align='center'>
+                    <Flex>
+                        <Image source={
+                            userStore.mode === 'Light'
+                                ? require('../../assets/user/language_l.png')
+                                : require('../../assets/user/language_d.png')
+                        } style={styles.settingIcon}/>
+                        <ThemeText>语言</ThemeText>
+                    </Flex>
+
+                    <DropDownPicker
+                        open={languageModalOpen}
+                        value={languageModalValue as any}
+                        items={languageItems as any}
+                        setOpen={setLanguageModalOpen}
+                        setValue={setLanguageModalValue}
+                        theme={userStore?.mode === 'Light' ? 'LIGHT' : 'DARK'}
+                        multiple={false}
+                        containerStyle={{
+                            width: 150,
+                            zIndex: 9999, // 如果两个下拉框同时打开，至少要让上一个遮挡住下一个
+                        }}
+                        disableBorderRadius={true}
+                    />
                 </Flex>
 
-                <Flex justify='between'>
+                {/*主题色切换 亮色 - 暗色*/}
+                <Flex justify='between' style={styles.settingFlexItem} align='center'>
                     <Flex>
-                        <Image source={require('../../assets/user/language.png')} />
+                        <Image source={
+                            userStore.mode === 'Light'
+                                ? require('../../assets/user/mode_l.png')
+                                : require('../../assets/user/mode_d.png')
+                        } style={styles.settingIcon}/>
                         <ThemeText>模式</ThemeText>
                     </Flex>
-                    <ThemeText style={styles.showSetting}>{userStore?.mode}</ThemeText>
 
                     <DropDownPicker
                         open={modeModalOpen}
@@ -82,12 +132,54 @@ function UserApp(props:IUserApp) {
                         setValue={setModeModalValue}
                         theme={userStore?.mode === 'Light' ? 'LIGHT' : 'DARK'}
                         multiple={false}
+                        containerStyle={{
+                            width: 150,
+                        }}
+                        disableBorderRadius={true}
+                        onChangeValue={handleModeValueChange}
                     />
                 </Flex>
 
+                <WhiteSpace size='xl' />
+
                 <ThemeText>关于</ThemeText>
 
-                <WhiteSpace size='xl' />
+                {/*帮助中心*/}
+                <Flex align='center' style={styles.settingFlexItem}>
+                    <Image source={
+                        userStore.mode === 'Light'
+                            ? require('../../assets/user/help_l.png')
+                            : require('../../assets/user/help_d.png')
+                    } style={styles.settingIcon}/>
+                    <ThemeText>帮助中心</ThemeText>
+                </Flex>
+
+                {/*用户须知*/}
+                <Flex align='center' style={styles.settingFlexItem}>
+                    <Image source={
+                        userStore.mode === 'Light'
+                            ? require('../../assets/user/locker_l.png')
+                            : require('../../assets/user/locker_d.png')
+                    } style={styles.settingIcon}/>
+                    <ThemeText>用户须知</ThemeText>
+                </Flex>
+
+                {/*关于*/}
+                <Flex align='center' style={styles.settingFlexItem}>
+                    <Image source={
+                        userStore.mode === 'Light'
+                            ? require('../../assets/user/about_l.png')
+                            : require('../../assets/user/about_d.png')
+                    } style={styles.settingIcon}/>
+                    <ThemeText>关于</ThemeText>
+                </Flex>
+
+                {/*注销*/}
+                <Flex align='center' style={styles.settingFlexItem}>
+                    <Image source={require('../../assets/user/logout.png')} style={styles.settingIcon}/>
+                    <Text style={{color: '#F75555'}}>注销</Text>
+                </Flex>
+
             </WingBlank>
 
         </ThemeView>
@@ -143,6 +235,14 @@ const styles = StyleSheet.create({
         fontStyle: 'normal',
         color: 'rgba(0,0,0,0.8)',
     },
+    settingFlexItem: {
+      marginTop: 15,
+    },
+    settingIcon: {
+        width: 30,
+        height: 30,
+        marginRight: 12,
+    }
 });
 
 export default inject('userStore')(observer(UserApp));

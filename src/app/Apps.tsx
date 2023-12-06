@@ -102,7 +102,6 @@ const WelStackScreen = () => {
     }
 }
 
-
 const MainStackScreen = () => {
     const {channel} = useAppContext();
     const insets = useSafeAreaInsets();
@@ -213,7 +212,9 @@ const ForgetStackScreen = () => {
 
 const TabScreen = () => {
     return (
-        <Tab.Navigator initialRouteName='Home'>
+        <Tab.Navigator
+            initialRouteName='Home'
+        >
             <Tab.Screen name='Home' component={HomePageApp} options={{headerShown: false}}/>
             <Tab.Screen name='User' component={UserApp} options={{headerShown: false}} />
         </Tab.Navigator>

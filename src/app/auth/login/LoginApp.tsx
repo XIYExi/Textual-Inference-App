@@ -50,7 +50,7 @@ function LoginApp(props: any) {
                 // 先保存一份到store中
                 userStore?.storeSetting({
                     settingId: success.id,
-                    language: success.language === 'zh' ? '简体中文' : 'English',
+                    language: success.language,
                     mode: success.mode == 0 ? 'Light' : 'Dark',
                 })
 
