@@ -24,13 +24,15 @@ import AuthEmail from "./auth/forget/authEmail/AuthEmail";
 import AuthOTP from "./auth/forget/authOTP/AuthOTP";
 import ChangePWD from "./auth/forget/changePWD/ChangePWD";
 import FillinApp from "./auth/fillin/FillinApp";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import UserApp from "./user/UserApp";
 
 
 const MainStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
 const WelStack = createNativeStackNavigator();
 const ForgetStack = createNativeStackNavigator();
-
+const Tab = createBottomTabNavigator();
 
 // Navigation types
 export type NavigationParamsList = {
@@ -209,12 +211,21 @@ const ForgetStackScreen = () => {
 }
 
 
-export const Apps = () => {
+const TabScreen = () => {
+    return (
+        <Tab.Navigator initialRouteName='Home'>
+            <Tab.Screen name='Home' component={HomePageApp} options={{headerShown: false}}/>
+            <Tab.Screen name='User' component={UserApp} options={{headerShown: false}} />
+        </Tab.Navigator>
+    )
+}
 
+
+export const Apps = () => {
 
     return (
         <RootStack.Navigator
-            initialRouteName='Wel'
+            initialRouteName='Login'
         >
             <RootStack.Screen
                 name='Wel'
@@ -242,9 +253,9 @@ export const Apps = () => {
                 options={{headerShown: false}}
             />
             <RootStack.Screen
-                name='Home'
-                component={HomePageApp}
-                options={{ headerShown: false }}
+                name='Homes'
+                component={TabScreen}
+                options={{headerShown: false}}
             />
             <RootStack.Screen
                 name='Api'

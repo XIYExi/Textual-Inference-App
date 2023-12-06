@@ -1,17 +1,24 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {inject, observer} from "mobx-react";
 import {IHomeStore} from "../../mobx/homeStore";
 import {Button, Flex, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
 import {Image, StyleSheet} from "react-native";
 import {useNavigation} from "@react-navigation/native";
+import {IUserStore} from "../../mobx/userStore";
+import {useThemeContext} from "../../themeContext";
+import ThemeView from "../../components/ThemeView";
+import ThemeText from "../../components/ThemeText";
 
+interface IHomePageApp {
+    userStore: IUserStore;
+}
 
-function HomePageApp() {
+function HomePageApp(props: IHomePageApp) {
 
     const navigation = useNavigation();
 
     return (
-        <View>
+        <ThemeView>
             <WingBlank>
                 {/*header*/}
                 <Flex style={styles.header} justify="between">
@@ -19,7 +26,7 @@ function HomePageApp() {
                         <Image source={require('../../assets/home/icon.png')} style={styles.icon}/>
                     </Flex.Item>
                     <Flex.Item>
-                        <Text style={styles.title}>ChattyAI</Text>
+                        <ThemeText style={styles.title}>ChattyAI</ThemeText>
                     </Flex.Item>
                     <Flex.Item>
                         {/*标题最后占位用的div块，用于flex-between局部将title居中*/}
@@ -33,12 +40,12 @@ function HomePageApp() {
                     <WhiteSpace size='xl'/>
                     <Image source={require('../../assets/home/bigIcon.png')} style={styles.containerIcon}/>
                     <View style={styles.containerCtx}>
-                        <Text style={styles.containerCtxPrimary}>欢迎来到</Text>
-                        <Text style={styles.containerCtxSecondary}>ChattyAI 👋</Text>
-                        <Text style={styles.containerCtxDesc}>
+                        <ThemeText style={styles.containerCtxPrimary}>欢迎来到</ThemeText>
+                        <ThemeText style={styles.containerCtxSecondary}>ChattyAI 👋</ThemeText>
+                        <ThemeText style={styles.containerCtxDesc}>
                             现在就开始和ChattyAI聊天吧。
                             你可以问我任何问题。
-                        </Text>
+                        </ThemeText>
                     </View>
 
                     <Button
@@ -50,13 +57,13 @@ function HomePageApp() {
                             navigation.navigate('Main')
                         }}
                     >
-                        <Text style={styles.buttonText}>开始使用</Text>
+                        <ThemeText style={styles.buttonText}>开始使用</ThemeText>
                     </Button>
 
                 </View>
 
             </WingBlank>
-        </View>
+        </ThemeView>
     )
 
 }
@@ -73,7 +80,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '500',
         textAlign: 'center',
-        color: '#212121',
         lineHeight: 64,
     },
     hiddenView: {
@@ -82,6 +88,7 @@ const styles = StyleSheet.create({
     },
     container: {
         alignItems: 'center',
+        height: '100%',
     },
     containerIcon: {
         width: 140,
@@ -124,6 +131,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#17CE92',
         alignSelf: 'stretch',
         gap: 10,
+        borderWidth: 0,
     },
     buttonText: {
         fontSize: 18,

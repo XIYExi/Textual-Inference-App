@@ -3,15 +3,17 @@ import {ActivityIndicator, Image, KeyboardAvoidingView, Pressable, StyleSheet} f
 import Input from "../../../components/Input";
 import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
+import {port} from "../../../utils/port";
+import {inject, observer} from "mobx-react";
 
 /**
  * 登录页面
  * @constructor
  */
-const _email = "contact@react-ui-kit.com";
-const _password = "subscribe";
+const _email = "123@163.com";
+const _password = "123456";
 
-function LoginApp() {
+function LoginApp(props: any) {
 
     const [email, setEmail] = useState(_email);
     const [password, setPassword] = useState(_password);
@@ -22,9 +24,76 @@ function LoginApp() {
 
     const navigation = useNavigation();
 
-    const handleLogin = () => {
-        // @ts-ignore
-        navigation.navigate('Home')
+    const {userStore} = props;
+
+    const getUserSetting = async (id:string) => {
+        await fetch(`${port}/auth/setting`, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const {res} = data.data;
+                console.log('res', data);
+
+                if (res.error) {
+                    // TODO 【用户数据获取失败】 error样式
+                }
+
+                const {success} = res;
+                // 先保存一份到store中
+                userStore?.storeSetting({
+                    settingId: success.id,
+                    language: success.language === 'zh' ? '简体中文' : 'English',
+                    mode: success.mode == 0 ? 'Light' : 'Dark',
+                })
+
+            })
+            .catch(err => {
+                console.log(`【用户数据获取失败】 -> ${err}`);
+            })
+    };
+
+    const handleLogin = async () => {
+        await fetch(`${port}/auth/login`, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        })
+            .then((response:any) => response.json())
+            .then((data:any) => {
+                const {res} = data.data;
+
+                if (res.error) {
+                    setErrors(res.error);
+                    return;
+                }
+
+                // 全局存储用户信息给后续页面使用
+                const {success} = res;
+                userStore.storeUser(success);
+
+                // 查询用户设置，用于更新app配置
+                getUserSetting(success.id);
+
+                // @ts-ignore
+                navigation.navigate('Homes');
+            })
+            .catch(err => {
+                console.log(`【登录认证失败】 -> ${err}`);
+            })
     }
 
     return (
@@ -148,4 +217,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default LoginApp;
+export default inject('userStore')(observer(LoginApp));

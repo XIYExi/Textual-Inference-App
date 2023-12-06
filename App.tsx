@@ -12,7 +12,7 @@ import { OverlayProvider, Chat } from 'stream-chat-react-native';
 import {AppProvider} from "./src/AppContext";
 import { chatClient } from "./src/app/chat/steam/chatConfig";
 import {SafeAreaProvider} from "react-native-safe-area-context";
-import {useChatClient} from "./src/app/chat/steam/useChatClient";
+import {ThemeProvider} from './src/themeContext';
 import {SearchContextProvider} from "./src/SearchContext";
 import {NewMessageProvider} from "./src/NewMessageContext";
 import {Apps} from "./src/app/Apps";
@@ -26,21 +26,23 @@ function App(): JSX.Element {
           <NavigationContainer>
               <AppProvider>
                   <SearchContextProvider>
-                      <AntdRnProvider>
-                          <Provider {...stores}>
-                              <GestureHandlerRootView style={{ flex: 1 }}>
-                                  <SafeAreaView style={{ flex: 1 }}>
-                                      <OverlayProvider>
-                                          <NewMessageProvider>
-                                              <Chat client={chatClient}>
-                                                  <Apps />
-                                              </Chat>
-                                          </NewMessageProvider>
-                                      </OverlayProvider>
-                                  </SafeAreaView>
-                              </GestureHandlerRootView>
-                          </Provider>
-                    </AntdRnProvider>
+                          <AntdRnProvider>
+                              <ThemeProvider>
+                                  <Provider {...stores}>
+                                      <GestureHandlerRootView style={{ flex: 1 }}>
+                                          <SafeAreaView style={{ flex: 1 }}>
+                                              <OverlayProvider>
+                                                  <NewMessageProvider>
+                                                      <Chat client={chatClient}>
+                                                          <Apps />
+                                                      </Chat>
+                                                  </NewMessageProvider>
+                                              </OverlayProvider>
+                                          </SafeAreaView>
+                                      </GestureHandlerRootView>
+                                  </Provider>
+                              </ThemeProvider>
+                          </AntdRnProvider>
                   </SearchContextProvider>
               </AppProvider>
           </NavigationContainer>

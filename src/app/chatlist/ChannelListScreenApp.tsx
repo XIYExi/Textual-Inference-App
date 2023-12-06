@@ -7,6 +7,7 @@ import {ChannelSort} from "stream-chat";
 import {StyleSheet} from "react-native";
 import {SearchContext} from "../../SearchContext";
 import {MessageSearchList} from "./MessageSearchList";
+import ThemeView from "../../components/ThemeView";
 
 // 过滤
 const filters = {
@@ -67,7 +68,7 @@ const ChannelListScreenApp: React.FC<any> = ({navigation}) => {
 
 
     return (
-        <View style={StyleSheet.absoluteFill}>
+        <ThemeView style={StyleSheet.absoluteFill}>
             {(!!searchQuery || (messages && messages.length > 0)) && (
                 <MessageSearchList
                     EmptySearchIndicator={EmptySearchIndicator}
@@ -93,7 +94,7 @@ const ChannelListScreenApp: React.FC<any> = ({navigation}) => {
                     />
                 </View>
             </View>
-        </View>
+        </ThemeView>
     )
 }
 
