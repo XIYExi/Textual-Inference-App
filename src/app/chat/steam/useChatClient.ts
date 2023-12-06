@@ -4,6 +4,7 @@ import { chatClient, chatUserId, chatUserName, chatUserToken} from './chatConfig
 const user = {
     id: chatUserId,
     name: chatUserName,
+    image: 'https://i.imgur.com/fR9Jz14.png',
 };
 
 // export const chatClient = StreamChat.getInstance(chatApiKey, chatApiSecret);
@@ -37,6 +38,8 @@ export const useChatClient = () => {
             setupClient();
             // console.log(chatClient.userID)
         }
+
+        return () => chatClient.disconnectUser();
     }, []);
 
     return {

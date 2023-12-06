@@ -1,9 +1,10 @@
 import {Button, View} from "@ant-design/react-native";
-import {chatClient, chatUserId} from "../chat/steam/chatConfig";
+import {chatClient, chatUserId, chatUserName, chatUserToken} from "../chat/steam/chatConfig";
 import {ChannelSort} from "stream-chat";
 import {ChannelList, Channel, MessageList, MessageInput} from "stream-chat-react-native";
 import {StyleSheet} from "react-native";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import {useChatClient} from "../chat/steam/useChatClient";
 
 
 const filters = {
@@ -24,9 +25,39 @@ const options = {
 };
 
 
+const user = {
+    id: chatUserId,
+    name: chatUserName,
+    image: 'https://i.imgur.com/fR9Jz14.png',
+};
+
+
 function ApiApp() {
 
     const [channel, setChannel] = useState(null);
+
+    // @ts-ignore
+    useEffect(() => {
+        const setupClient = async () => {
+            try {
+                const answer = await chatClient.connectUser(user, chatUserToken);
+                console.log('useChatClient wait connect... : -> ', answer)
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error(`An error occurred while connecting the user: ${error.message}`);
+                }
+            }
+        };
+
+        // If the chat client has a value in the field `userID`, a user is already connected
+        // and we can skip trying to connect the user again.
+        if (!chatClient.userID) {
+            setupClient();
+            // console.log(chatClient.userID)
+        }
+
+        return () => chatClient.disconnectUser();
+    }, []);
 
     const testMessageSearch = async () => {
 
@@ -45,14 +76,14 @@ function ApiApp() {
             },
         );
 
-        console.log('\n');
+        console.log(res);
+        console.log('search end.')
 
     }
 
     const testChannelQuery = async() => {
 
         console.log('begin query chatClient.queryChannels: -> \n');
-
         const filter = { type: 'messaging', members: { $in: [chatClient?.user?.id || null] } };
         const sort = [{ last_message_at: -1 }];
 
@@ -71,7 +102,23 @@ function ApiApp() {
             }
         })
 
-        console.log('\n');
+        console.log('query end.');
+    }
+
+    const testCreateChannel = async () => {
+        console.log('begin create chatClient.createChannel: -> \n');
+
+        const channel = chatClient.channel(
+            "messaging",
+            "testCreateChannel",
+            {
+                name: "JustFor.dev"
+            }
+        )
+        await channel.watch(); // 通过.watch()自动订阅消息
+
+
+        console.log('end create chatClient.createChannel.\n');
     }
 
     // channel cid
@@ -83,52 +130,12 @@ function ApiApp() {
         <View>
             <Button onPress={() => testMessageSearch()}>chatClient.search</Button>
             <Button onPress={() => testChannelQuery()}>chatClient.queryChannels</Button>
+            <Button onPress={() => testCreateChannel()}>chatClient.createChannel</Button>
 
-            <View style={{height: '100%'}}>
-                <View
-                    style={[styles.channelListContainer]}>
-
-                </View>
-            </View>
 
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    channelListContainer: {
-        height: '100%',
-        position: 'absolute',
-        width: '100%',
-    },
-    emptyIndicatorContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 40,
-    },
-    emptyIndicatorText: {paddingTop: 28},
-    flex: {
-        flex: 1,
-    },
-    searchContainer: {
-        alignItems: 'center',
-        borderRadius: 30,
-        borderWidth: 1,
-        flexDirection: 'row',
-        margin: 8,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-    },
-    searchInput: {
-        flex: 1,
-        fontSize: 14,
-        includeFontPadding: false, // for android vertical text centering
-        padding: 0, // removal of default text input padding on android
-        paddingHorizontal: 10,
-        paddingTop: 0, // removal of iOS top padding for weird centering
-        textAlignVertical: 'center', // for android vertical text centering
-    },
-});
 
 
 export default ApiApp;

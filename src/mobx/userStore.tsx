@@ -7,15 +7,15 @@ interface IUserStore {
     password: string;
     avatar: string;
     address: string;
+    sex: string;
+    occupation: string;
 
     settingId: string;
-    language: string;
     mode: string;
 
     storeUser: (param: any) => void;
     storeSetting: (param: any) => void;
     changeSettingMode: (param:string) => void;
-    changeSettingLanguage:(para:string) => void;
 }
 
 class UserStore implements IUserStore {
@@ -25,9 +25,10 @@ class UserStore implements IUserStore {
     password = '';
     avatar = '';
     address = '';
+    sex = '';
+    occupation = '';
 
     settingId = '';
-    language = '';
     mode = '';
 
     constructor() {
@@ -41,20 +42,17 @@ class UserStore implements IUserStore {
         this.password = user.password;
         this.avatar = user.avatar;
         this.address = user.address;
+        this.occupation = user.occupation;
+        this.sex = user.sex;
     }
 
-    storeSetting({settingId, language, mode}: {[key:string]: string}) {
+    storeSetting({settingId, mode}: {[key:string]: string}) {
         this.settingId = settingId;
-        this.language = language;
         this.mode = mode;
     }
 
     changeSettingMode(mode:string) {
         this.mode = mode;
-    }
-
-    changeSettingLanguage(language:string) {
-        this.language = language;
     }
 
 }

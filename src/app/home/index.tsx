@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {inject, observer} from "mobx-react";
-import {IHomeStore} from "../../mobx/homeStore";
 import {Button, Flex, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
 import {Image, StyleSheet} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {IUserStore} from "../../mobx/userStore";
-import {useThemeContext} from "../../themeContext";
 import ThemeView from "../../components/ThemeView";
 import ThemeText from "../../components/ThemeText";
+import {useTranslation} from "react-i18next";
 
 interface IHomePageApp {
     userStore: IUserStore;
@@ -16,9 +14,11 @@ interface IHomePageApp {
 function HomePageApp(props: IHomePageApp) {
 
     const navigation = useNavigation();
+    const { t } = useTranslation();
 
     return (
         <ThemeView>
+            <WhiteSpace size='xl' />
             <WingBlank>
                 {/*header*/}
                 <Flex style={styles.header} justify="between">
@@ -40,11 +40,10 @@ function HomePageApp(props: IHomePageApp) {
                     <WhiteSpace size='xl'/>
                     <Image source={require('../../assets/home/bigIcon.png')} style={styles.containerIcon}/>
                     <View style={styles.containerCtx}>
-                        <ThemeText style={styles.containerCtxPrimary}>欢迎来到</ThemeText>
+                        <ThemeText style={styles.containerCtxPrimary}>{t('home.title')}</ThemeText>
                         <ThemeText style={styles.containerCtxSecondary}>ChattyAI 👋</ThemeText>
                         <ThemeText style={styles.containerCtxDesc}>
-                            现在就开始和ChattyAI聊天吧。
-                            你可以问我任何问题。
+                            {t('home.subtitle')}
                         </ThemeText>
                     </View>
 
@@ -57,7 +56,7 @@ function HomePageApp(props: IHomePageApp) {
                             navigation.navigate('Main')
                         }}
                     >
-                        <ThemeText style={styles.buttonText}>开始使用</ThemeText>
+                        <ThemeText style={styles.buttonText}>{t('home.begin')}</ThemeText>
                     </Button>
 
                 </View>

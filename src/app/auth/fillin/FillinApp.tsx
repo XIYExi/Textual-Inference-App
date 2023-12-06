@@ -1,37 +1,85 @@
-import {Button, Flex, ImagePicker, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
-import {useState} from "react";
+import {Button, Flex, ImagePicker, Text, Toast, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import {ActivityIndicator, Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet} from "react-native";
 import Input from "../../../components/Input";
 import {useNavigation} from "@react-navigation/native";
+import {useTranslation} from "react-i18next";
+import {port} from "../../../utils/port";
 
 
 /**
  * 完善个人信息页面，直接跳过则使用默认信息
  * @constructor
  */
-function FillinApp() {
+function FillinApp(props: any) {
+
+    const {userId} = props.route.params;
 
     const [name, setName] = useState('');
     const navigation = useNavigation();
     const [phone, setPhone] = useState('');
+    const [occupation, setOccupation] = useState('');
+    const [sex, setSex] = useState('');
+    const [address, setAddress] = useState('');
 
     const handleUpdate = () => {
         // TODO 更新用户数据
+        //  这一步无论是skip还是continue都必须到Login页面，用户必须登录，不然获取不到theme mode信息
 
-        //@ts-ignore
-        navigation.navigate('Home');
+        handleFillInFetch();
     }
 
+    const handleFillInFetch = async () => {
+        await fetch(`${port}/auth/fillin`, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({
+                id: userId,
+                name: name,
+                phone: phone,
+                occupation: occupation,
+                sex: sex,
+                address: address,
+            }),
+        })
+            .then((response:any) => response.json())
+            .then((data:any) => {
+                const {res} = data.data;
+                console.log(data)
+
+                if (res.error)
+                    Toast.info({
+                        content: (<Text style={{color: '#fff'}}>{res.error}</Text>),
+                        duration: 2,
+                        stackable: false,
+                    })
+                else{
+                    //@ts-ignore
+                    navigation.navigate('Login');
+                }
+            })
+            .catch(err => {
+                console.log(`【用户信息更新异常】 -> ${err}`);
+            })
+    }
+
+    const {t} = useTranslation();
 
     return (
-        <KeyboardAvoidingView style={styles.login} behavior='padding'>
+        <View style={styles.login}>
+            <WhiteSpace size='xl' />
             <WhiteSpace size='xl' />
             <WingBlank style={{flex: 1}}>
 
-                <Text style={styles.title}>填写您的个人资料📋</Text>
-                <Text style={styles.subTitle}>请输入您的个人资料。别担心，只有你才能看到你的个人数据。其他人将无法看到它。或者你可以暂时跳过它。</Text>
+                <Text style={styles.title}>{t('fill.title')}📋</Text>
+                <Text style={styles.subTitle}>{t('fill.subtitle')}</Text>
 
                 <ScrollView style={{marginTop: 20, flex: 1, marginBottom: 20,}}>
+                    <KeyboardAvoidingView style={{flex: 1}} behavior='padding'>
+
 
                     <Flex justify='center'>
                         {/*TODO 预览和上传头像*/}
@@ -39,37 +87,33 @@ function FillinApp() {
                     </Flex>
 
                     <Input
-                        label='昵称'
+                        label={t('fill.username')}
                         style={[styles.input]}
                         onChangeText={(text:string) => setName(text)}
                     />
                     <Input
-                        secure
-                        label="电话"
+                        label={t('fill.phone')}
                         style={[styles.input]}
                         onChangeText={(text:string) => setPhone(text)}
                     />
                     <Input
-                        secure
-                        label="职业方向"
+                        label={t('fill.occupation')}
                         style={[styles.input]}
-                        onChangeText={(text:string) => setPhone(text)}
+                        onChangeText={(text:string) => setOccupation(text)}
                     />
 
                     <Input
-                        secure
-                        label="性别"
+                        label={t('fill.sex')}
                         style={[styles.input]}
-                        onChangeText={(text:string) => setPhone(text)}
+                        onChangeText={(text:string) => setSex(text)}
                     />
 
                     <Input
-                        secure
-                        label="出生年月"
+                        label={t('fill.address')}
                         style={[styles.input]}
-                        onChangeText={(text:string) => setPhone(text)}
+                        onChangeText={(text:string) => setAddress(text)}
                     />
-
+                    </KeyboardAvoidingView>
                 </ScrollView>
 
                 <Flex justify='between' style={{marginTop: 10, marginBottom: 30}}>
@@ -82,7 +126,7 @@ function FillinApp() {
                         }}
                         onPress={() => {
                             //@ts-ignore
-                            navigation.navigate('Home')
+                            navigation.navigate('Login')
                         }}
                     >
                         <Text style={{
@@ -90,7 +134,7 @@ function FillinApp() {
                             fontWeight: '600',
                             textAlign: 'center',
                         }}>
-                            跳过
+                            {t('fill.skip')}
                         </Text>
                     </Button>
 
@@ -107,14 +151,14 @@ function FillinApp() {
                             fontWeight: '600',
                             textAlign: 'center',
                         }}>
-                            继续
+                            {t('fill.continue')}
                         </Text>
                     </Button>
                 </Flex>
 
 
             </WingBlank>
-        </KeyboardAvoidingView>
+        </View>
     )
 }
 

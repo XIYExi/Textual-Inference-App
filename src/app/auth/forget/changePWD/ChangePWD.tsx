@@ -4,6 +4,7 @@ import {ActivityIndicator, Image, KeyboardAvoidingView, Pressable, StyleSheet} f
 import Input from "../../../../components/Input";
 import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
+import {useTranslation} from "react-i18next";
 
 
 function ChangePWD() {
@@ -24,8 +25,11 @@ function ChangePWD() {
         }
     }
 
+    const {t} = useTranslation();
+
     return(
         <KeyboardAvoidingView style={styles.login} behavior='padding'>
+            <WhiteSpace size='xl' />
             <WhiteSpace size='xl' />
             <WingBlank style={{flex: 1}}>
                 <Pressable onPress={() => {
@@ -35,20 +39,20 @@ function ChangePWD() {
                     <Image source={require('../../../../assets/login/back.png')} style={styles.back}/>
                 </Pressable>
 
-                <Text style={styles.title}>创建新密码🔒</Text>
-                <Text style={styles.subTitle}>创建新密码。如果你忘记了它，那么你必须做忘记密码。</Text>
+                <Text style={styles.title}>{t('auth.forget.change.title')}🔒</Text>
+                <Text style={styles.subTitle}>{t('auth.forget.change.subtitle')}</Text>
 
                 <View style={{marginTop: 20,}}>
                     <Input
                         secure
-                        label="新密码"
+                        label={t("auth.forget.change.newPWD")}
                         style={[styles.input]}
                         onChangeText={(text:string) => setPassword(text)}
                     />
 
                     <Input
                         secure
-                        label="确认新密码"
+                        label={t("auth.forget.change.confirmPWD")}
                         style={[styles.input]}
                         onChangeText={(text:string) => setConfirmPWD(text)}
                     />
@@ -66,7 +70,7 @@ function ChangePWD() {
                             fontWeight: '600',
                             textAlign: 'center',
                         }}>
-                            继续
+                            {t("auth.forget.email.continue")}
                         </Text>
                     </Button>
                 </View>

@@ -2,10 +2,12 @@ import {Button, Flex, Text, View, WhiteSpace, WingBlank} from "@ant-design/react
 import {Image, StyleSheet, TouchableOpacity} from "react-native";
 import {removeItem} from "../../../utils/asyncStorage";
 import {useNavigation} from "@react-navigation/native";
+import {useTranslation} from "react-i18next";
 
 function WelcomeApp() {
 
     const navigation = useNavigation();
+    const {t} = useTranslation();
 
     const tutor = async () => {
         await removeItem('introduction');
@@ -17,7 +19,8 @@ function WelcomeApp() {
         <WingBlank>
             <WhiteSpace size='xl'/>
             <WhiteSpace size='xl'/>
-            <WhiteSpace size='xl'/>
+            <WhiteSpace size='xl' />
+            <WhiteSpace size='xl' />
 
             <TouchableOpacity style={{
                 padding: 20,
@@ -35,7 +38,7 @@ function WelcomeApp() {
 
                 {/*Title*/}
                 <View style={styles.title}>
-                    <Text style={styles.firstTitle}>欢迎来到</Text>
+                    <Text style={styles.firstTitle}>{t('wel.title')}</Text>
                     <Text style={styles.secondTitle}>ChattyAI 👋</Text>
                 </View>
             </Flex>
@@ -46,13 +49,13 @@ function WelcomeApp() {
                     //@ts-ignore
                     navigation.navigate('Login');
                 }} >
-                    <Text style={{color: '#fff'}}>登录</Text>
+                    <Text style={{color: '#fff'}}>{t('wel.login')}</Text>
                 </Button>
                 <Button style={styles.registerBtn} onPress={() => {
                     //@ts-ignore
                     navigation.navigate('Register');
                 }}>
-                    <Text style={{color: '#17CE92'}}>注册</Text>
+                    <Text style={{color: '#17CE92'}}>{t("wel.register")}</Text>
                 </Button>
             </View>
             {/*Login Container End*/}

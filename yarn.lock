@@ -15,9 +15,14 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@ant-design/icons-react-native@^2.3.1", "@ant-design/icons-react-native@^2.3.2":
+"@ant-design/icons-react-native@^2.3.1":
   version "2.3.2"
   resolved "https://registry.npmmirror.com/@ant-design/icons-react-native/-/icons-react-native-2.3.2.tgz"
+  integrity sha512-ULCN3+elfAsvu71Xa5KODi97Y3P2aUkJm4s8mJaPoRjiU+BR+Y6ejv3vbc40yV62EOdlAOMKhvKbFlsXMjZ2ow==
+
+"@ant-design/icons-react-native@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@ant-design/icons-react-native/-/icons-react-native-2.3.2.tgz#86e412d1ce8d629534a5d9f45cd3d8f7ca6dae56"
   integrity sha512-ULCN3+elfAsvu71Xa5KODi97Y3P2aUkJm4s8mJaPoRjiU+BR+Y6ejv3vbc40yV62EOdlAOMKhvKbFlsXMjZ2ow==
 
 "@ant-design/react-native@^5.0.5":
@@ -1169,7 +1174,7 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.12.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3":
+"@babel/runtime@^7.12.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.22.5", "@babel/runtime@^7.23.2":
   version "7.23.5"
   resolved "https://registry.npmmirror.com/@babel/runtime/-/runtime-7.23.5.tgz"
   integrity sha512-NdUTHcPe4C99WxPub+K9l9tK5/lV4UXIoaHSYgzco9BCyjKAAwzdBI+wWtYqHt7LJdbo74ZjRPJgzVweq1sz0w==
@@ -4363,6 +4368,13 @@ html-escaper@^2.0.0:
   resolved "https://registry.npmmirror.com/html-escaper/-/html-escaper-2.0.2.tgz"
   integrity sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==
 
+html-parse-stringify@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmmirror.com/html-parse-stringify/-/html-parse-stringify-3.0.1.tgz#dfc1017347ce9f77c8141a507f233040c59c55d2"
+  integrity sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==
+  dependencies:
+    void-elements "3.1.0"
+
 http-errors@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/http-errors/-/http-errors-2.0.0.tgz"
@@ -4385,6 +4397,13 @@ i18next@20.2.4:
   integrity sha512-goE1LCA/IZOGG26PkkqoOl2KWR7YP606SvokVQZ29J6QwE02KycrzNetoMUJeqYrTxs4rmiiZgZp+q8qofQL6Q==
   dependencies:
     "@babel/runtime" "^7.12.0"
+
+i18next@^23.7.7:
+  version "23.7.7"
+  resolved "https://registry.npmmirror.com/i18next/-/i18next-23.7.7.tgz#e650ee962417186c5ba78bdaea3979abd31d3bfc"
+  integrity sha512-peTvdT+Lma+o0LfLFD7IC2M37N9DJ04dH0IJYOyOHRhDfLo6nK36v7LkrQH35C2l8NHiiXZqGirhKESlEb/5PA==
+  dependencies:
+    "@babel/runtime" "^7.23.2"
 
 ieee754@^1.1.13:
   version "1.2.1"
@@ -6664,6 +6683,14 @@ react-freeze@^1.0.0:
   resolved "https://registry.npmmirror.com/react-freeze/-/react-freeze-1.0.3.tgz"
   integrity sha512-ZnXwLQnGzrDpHBHiC56TXFXvmolPeMjTn1UOm610M4EXGzbEDR7oOIyS2ZiItgbs6eZc4oU/a0hpk8PrcKvv5g==
 
+react-i18next@^13.5.0:
+  version "13.5.0"
+  resolved "https://registry.npmmirror.com/react-i18next/-/react-i18next-13.5.0.tgz#44198f747628267a115c565f0c736a50a76b1ab0"
+  integrity sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==
+  dependencies:
+    "@babel/runtime" "^7.22.5"
+    html-parse-stringify "^3.0.1"
+
 react-is@^16.12.0, react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmmirror.com/react-is/-/react-is-16.13.1.tgz"
@@ -6750,6 +6777,11 @@ react-native-lightbox@^0.7.0:
   integrity sha512-HS3T4WlCd0Gb3us2d6Jse5m6KjNhngnKm35Wapq30WtQa9s+/VMmtuktbGPGaWtswcDyOj6qByeJBw9W80iPCA==
   dependencies:
     prop-types "^15.5.10"
+
+react-native-localize@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.npmmirror.com/react-native-localize/-/react-native-localize-3.0.4.tgz#70bb6212cee4dd9eaabb65a4a6227dca5b7faf5e"
+  integrity sha512-O6NnwsdorLiK5PCulfiKSnNjBW8B0m1HO24MQOgSC2iHiZZWMCA2to7Ln5EOagaGPsqq5UbgisR2bpycoMPYaw==
 
 react-native-markdown-package@1.8.2:
   version "1.8.2"
@@ -8050,6 +8082,11 @@ vlq@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/vlq/-/vlq-1.0.1.tgz"
   integrity sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==
+
+void-elements@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmmirror.com/void-elements/-/void-elements-3.1.0.tgz#614f7fbf8d801f0bb5f0661f5b2f5785750e4f09"
+  integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
 
 walker@^1.0.7, walker@^1.0.8:
   version "1.0.8"

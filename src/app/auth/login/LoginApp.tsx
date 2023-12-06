@@ -5,6 +5,7 @@ import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {port} from "../../../utils/port";
 import {inject, observer} from "mobx-react";
+import {useTranslation} from "react-i18next";
 
 /**
  * 登录页面
@@ -96,8 +97,11 @@ function LoginApp(props: any) {
             })
     }
 
+    const {t} = useTranslation();
+
     return (
         <KeyboardAvoidingView style={styles.login} behavior='padding'>
+            <WhiteSpace size='xl' />
             <WhiteSpace size='xl' />
             <WingBlank style={{flex: 1}}>
                 <Pressable onPress={() => {
@@ -107,12 +111,12 @@ function LoginApp(props: any) {
                     <Image source={require('../../../assets/login/back.png')} style={styles.back}/>
                 </Pressable>
 
-                <Text style={styles.title}>欢迎回来👋</Text>
-                <Text style={styles.subTitle}>请输入您的电子邮箱和密码以登录</Text>
+                <Text style={styles.title}>{t('auth.login.title')}👋</Text>
+                <Text style={styles.subTitle}>{t('auth.login.subtitle')}</Text>
 
                 <View style={{marginTop: 20,}}>
                     <Input
-                        label='邮箱'
+                        label={t('auth.login.form.email')}
                         error={hasErrors('email')}
                         style={[styles.input, hasErrors('email')]}
                         defaultValue={email}
@@ -120,7 +124,7 @@ function LoginApp(props: any) {
                     />
                     <Input
                         secure
-                        label="密码"
+                        label={t('auth.login.form.password')}
                         error={hasErrors("password")}
                         style={[styles.input, hasErrors("password")]}
                         defaultValue={password}
@@ -142,7 +146,7 @@ function LoginApp(props: any) {
                                 fontWeight: '600',
                                 textAlign: 'center',
                             }}>
-                                登录
+                                {t('auth.login.form.submit')}
                             </Text>
                         )}
                     </Button>
@@ -167,7 +171,7 @@ function LoginApp(props: any) {
                                 fontWeight: '600',
                             }}
                         >
-                            忘记密码?
+                            {t('auth.login.form.forget')}
                         </Text>
                     </Button>
 

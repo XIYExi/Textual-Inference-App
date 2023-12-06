@@ -1,6 +1,6 @@
 import React, {useCallback, useContext} from "react";
 import {ChannelList, Search, useTheme} from "stream-chat-react-native";
-import {chatClient, chatUserId, StreamChatGenerics} from "../chat/steam/chatConfig";
+import {chatUserId} from "../chat/steam/chatConfig";
 import {useAppContext} from "../../AppContext";
 import {View, Text} from "@ant-design/react-native";
 import {ChannelSort} from "stream-chat";
@@ -8,6 +8,7 @@ import {StyleSheet} from "react-native";
 import {SearchContext} from "../../SearchContext";
 import {MessageSearchList} from "./MessageSearchList";
 import ThemeView from "../../components/ThemeView";
+import {port} from "../../utils/port";
 
 // 过滤
 const filters = {
@@ -50,12 +51,46 @@ const ChannelListScreenApp: React.FC<any> = ({navigation}) => {
 
     const onSelect = useCallback(
         (channel: any) => {
+            // 发送数据给后端
+            const channel_id = channel.id;  // test_1
+            const channel_name = channel.data.name; // test_1
+
+            handleUserSelectChannel(channel_id, channel_name) // 将数据发送到后端
+
+
+
             setChannel(channel);
-            //console.log('select channel: -> ', channel);
+            console.log('select channel: -> ', channel);
             navigation.navigate('Main', {screen: 'Channel'});
         },
         [navigation, setChannel],
     );
+
+
+
+    const handleUserSelectChannel = async (channelId: string, channelName: string) => {
+        await fetch(`${port}/chat/userSelectChannel`, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({
+                channelId: channelId,
+                channelName: channelName,
+            }),
+        })
+            .then((response:any) => response.json())
+            .then((data:any) => {
+                const {res} = data.data;
+                console.log('Channel select: -> ', res);
+            })
+            .catch(err => {
+                console.log(`【用户选择Channel异常】 -> ${err}`);
+            })
+    }
+
+
 
     const EmptySearchIndicator = () => (
         <View style={styles.emptyIndicatorContainer}>

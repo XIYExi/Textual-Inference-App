@@ -4,17 +4,18 @@ import Lottie from 'lottie-react-native';
 import {useNavigation} from "@react-navigation/native";
 import Onboarding from 'react-native-onboarding-swiper';
 import {setItem} from "../../../utils/asyncStorage";
+import {useTranslation} from "react-i18next";
 
 const {width, height} = Dimensions.get('window');
 
 function IntroductionApp() {
-
+    const {t} = useTranslation();
     const navigation = useNavigation();
 
     const doneButton = ({...props})=>{
         return (
             <TouchableOpacity style={styles.doneButton} {...props}>
-                <Text>完成</Text>
+                <Text>{t('wel.intro.complete')}</Text>
             </TouchableOpacity>
         )
     }
@@ -22,7 +23,7 @@ function IntroductionApp() {
     const skipButton =  ({...props})=>{
         return (
             <TouchableOpacity style={styles.doneButton} {...props}>
-                <Text>跳过</Text>
+                <Text>{t('wel.intro.skip')}</Text>
             </TouchableOpacity>
         )
     }
@@ -30,7 +31,7 @@ function IntroductionApp() {
     const nextButton =  ({...props})=>{
         return (
             <TouchableOpacity style={styles.doneButton} {...props}>
-                <Text>下一步</Text>
+                <Text>{t('wel.intro.next')}</Text>
             </TouchableOpacity>
         )
     }
@@ -60,8 +61,8 @@ function IntroductionApp() {
                                 <Lottie source={require('../../../assets/welcome/wel1.json')} autoPlay loop/>
                             </View>
                         ) ,
-                        title: '智能AI写作助手解放你的双手',
-                        subtitle: '使用预构建的自然语言理解模型，解析理解传递文档内容，这款应用可以帮助提高写作效率。',
+                        title: t('wel.intro.anim1.title'),
+                        subtitle: t('wel.intro.anim1.subtitle'),
                     },
                     {
                         backgroundColor: '#fef3c7',
@@ -70,8 +71,8 @@ function IntroductionApp() {
                                 <Lottie source={require('../../../assets/welcome/wel2.json')} autoPlay loop/>
                             </View>
                         ) ,
-                        title: '生成式机器阅读理解拓展你的思维',
-                        subtitle: '跳出文本的束缚，在模型理解文本的基础上，生成答案，通过对话问答的形式获得想要的内容。',
+                        title: t('wel.intro.anim2.title'),
+                        subtitle: t('wel.intro.anim2.subtitle'),
                     },
                     {
                         backgroundColor: '#a78bfa',
@@ -80,8 +81,8 @@ function IntroductionApp() {
                                 <Lottie source={require('../../../assets/welcome/wel3.json')} autoPlay loop/>
                             </View>
                         ) ,
-                        title: '多端多平台使用',
-                        subtitle: '应用登录IOS，Android，PC，可以尝试官网API调用服务。',
+                        title: t('wel.intro.anim3.title'),
+                        subtitle: t('wel.intro.anim3.title'),
                     },
                 ]}
             />

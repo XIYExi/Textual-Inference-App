@@ -4,6 +4,7 @@ import {Image, KeyboardAvoidingView, Pressable, StyleSheet, TextInput} from "rea
 import {useState} from "react";
 import CodeInput from "./CodeInput";
 import {useNavigation} from "@react-navigation/native";
+import {useTranslation} from "react-i18next";
 
 function AuthOTP(props:any) {
 
@@ -17,9 +18,11 @@ function AuthOTP(props:any) {
         navigation.navigate('ChangePWD');
     }
 
+    const {t} = useTranslation();
 
     return (
         <KeyboardAvoidingView style={styles.login} behavior='padding'>
+            <WhiteSpace size='xl' />
             <WhiteSpace size='xl' />
             <WingBlank style={{flex: 1}}>
                 <Pressable onPress={() => {
@@ -29,8 +32,8 @@ function AuthOTP(props:any) {
                     <Image source={require('../../../../assets/login/back.png')} style={styles.back}/>
                 </Pressable>
 
-                <Text style={styles.title}>OTP代码验证🔐</Text>
-                <Text style={styles.subTitle}>我们已向您的电子邮件发送OTP代码{forgetStore?.email}.在下面输入OTP代码进行验证。</Text>
+                <Text style={styles.title}>{t("auth.forget.otp.title")}🔐</Text>
+                <Text style={styles.subTitle}>{t('auth.forget.otp.subtitle_1')}{forgetStore?.email}.{t('auth.forget.otp.subtitle_2')}</Text>
 
                 <View style={{marginTop: 25}}>
                     <CodeInput style={styles.codeInput} value={value} onValueChange={setValue} />
@@ -47,7 +50,7 @@ function AuthOTP(props:any) {
                                 fontWeight: '600',
                                 textAlign: 'center',
                             }}>
-                                继续
+                                {t('auth.forget.email.continue')}
                             </Text>
                         </Button>
                 </View>

@@ -1,27 +1,69 @@
-import {Button, Checkbox, Flex, Modal, Text, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
-import {ActivityIndicator, Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet} from "react-native";
+import {Button, Checkbox, Flex, Modal, Text, Toast, View, WhiteSpace, WingBlank} from "@ant-design/react-native";
+import {ActivityIndicator, Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet } from "react-native";
 import Input from "../../../components/Input";
-import React, {useState} from "react";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
+import {useTranslation} from "react-i18next";
+import {port} from "../../../utils/port";
 
 function RegisterApp(){
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState(false);
+
+    const {t} = useTranslation();
 
     const navigation = useNavigation();
     const [open, setOpen] = useState(false);
+
+    const [errors, setErrors] = useState(['']);
+    const hasErrors = (key:any) => (errors.includes(key) ? styles.hasErrors : null);
 
     const handleRegister = () => {
         // TODO 发送后端进行注册，请求期间加载loading
         //  需要注意，当用户进行注册的时候在数据库中用户数据就已经被注册好了，但是有数据的字段只有email，pwd和id。
         //  其余都是使用默认值填充！在下一个页面中只是对数据继续update
-
-        //@ts-ignore
-        navigation.navigate('Fillin');
+        handleRegisterFetch(email, password, setLoading)
     }
+
+    const handleRegisterFetch = async (email:string, password:string, setLoading:Dispatch<SetStateAction<boolean>>) => {
+        setLoading(true);
+        await fetch(`${port}/auth/register`, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-type':'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        })
+            .then((response:any) => response.json())
+            .then((data:any) => {
+                const {res} = data.data;
+                setLoading(false);
+
+                if (res.error) {
+                    Toast.info({
+                        content: (<Text style={{color: '#fff'}}>{res.error}</Text>),
+                        duration: 2,
+                        stackable: false,
+                    });
+                    setErrors(['email']);
+                }
+                else{
+                    //@ts-ignore
+                    navigation.navigate('Fillin', {userId: res.success}); // 携带用户id跳转到信息完善界面
+                }
+            })
+            .catch(err => {
+                console.log(`【注册异常】 -> ${err}`);
+            })
+    }
+
 
     const checkUserDetails = () => {
         setChecked(prevState => !prevState);
@@ -37,6 +79,7 @@ function RegisterApp(){
     return (
         <KeyboardAvoidingView style={styles.login} behavior='padding'>
             <WhiteSpace size='xl' />
+            <WhiteSpace size='xl' />
             <WingBlank style={{flex: 1}}>
                 <Pressable onPress={() => {
                     //@ts-ignore
@@ -45,25 +88,26 @@ function RegisterApp(){
                     <Image source={require('../../../assets/login/back.png')} style={styles.back}/>
                 </Pressable>
 
-                <Text style={styles.title}>你好，👋</Text>
-                <Text style={styles.subTitle}>请输入您的电子邮件和密码以创建帐户。</Text>
+                <Text style={styles.title}>{t('register.title')}，👋</Text>
+                <Text style={styles.subTitle}>{t('register.subtitle')}</Text>
 
                 <View style={{marginTop: 20,}}>
                     <Input
-                        label='邮箱'
-                        style={[styles.input]}
+                        label={t('auth.login.form.email')}
+                        error={hasErrors('email')}
+                        style={[styles.input, hasErrors('email')]}
                         onChangeText={(text:string) => setEmail(text)}
                     />
                     <Input
                         secure
-                        label="密码"
+                        label={t('auth.login.form.password')}
                         style={[styles.input]}
                         onChangeText={(text:string) => setPassword(text)}
                     />
 
                     <Checkbox onChange={checkUserDetails} checked={checked}>
                         <Pressable onPress={() => setOpen(true)}>
-                            <Text style={{color: '#9DA3B4'}}>我同意ChattyAI使用协议</Text>
+                            <Text style={{color: '#9DA3B4'}}>{t("register.notice")}</Text>
                         </Pressable>
                     </Checkbox>
 
@@ -83,7 +127,7 @@ function RegisterApp(){
                                 fontWeight: '600',
                                 textAlign: 'center',
                             }}>
-                                继续
+                                {t('register.continue')}
                             </Text>
                         )}
                     </Button>
@@ -106,7 +150,7 @@ function RegisterApp(){
 
                                 <Flex justify='between' align='center'>
                                     <Text style={styles.modalTitle}>
-                                        使用协议
+                                        {t('register.agreement')}
                                     </Text>
 
                                     <Pressable onPress={() => {setOpen(prevState => !prevState)}}>
@@ -162,7 +206,7 @@ function RegisterApp(){
                                         }}
                                         style={{marginTop: 20,}}
                                 >
-                                    确认
+                                    {t('register.confirm')}
                                 </Button>
 
                             </ScrollView>

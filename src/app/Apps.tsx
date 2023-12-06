@@ -226,7 +226,7 @@ export const Apps = () => {
 
     return (
         <RootStack.Navigator
-            initialRouteName='Login'
+            initialRouteName='Register'
         >
             <RootStack.Screen
                 name='Wel'

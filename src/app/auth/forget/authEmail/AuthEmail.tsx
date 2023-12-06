@@ -3,11 +3,14 @@ import {ActivityIndicator, Image, KeyboardAvoidingView, Pressable, StyleSheet} f
 import Input from "../../../../components/Input";
 import {inject, observer} from "mobx-react";
 import {useNavigation} from "@react-navigation/native";
+import {useTranslation} from "react-i18next";
 
 function AuthEmail(props: any) {
 
     const {forgetStore} = props;
     const navigation = useNavigation();
+
+    const {t} = useTranslation();
 
     const handleNext = () => {
         // TODO 验证仅输入是否为合法邮箱 【此处不验证邮箱是否存在，如果用户输入邮箱不存在那么验证码也发不出去】
@@ -19,6 +22,7 @@ function AuthEmail(props: any) {
     return (
         <KeyboardAvoidingView style={styles.login} behavior='padding'>
             <WhiteSpace size='xl' />
+            <WhiteSpace size='xl' />
             <WingBlank style={{flex: 1}}>
                 <Pressable onPress={() => {
                     //@ts-ignore
@@ -27,12 +31,12 @@ function AuthEmail(props: any) {
                     <Image source={require('../../../../assets/login/back.png')} style={styles.back}/>
                 </Pressable>
 
-                <Text style={styles.title}>重置您的密码🔑</Text>
-                <Text style={styles.subTitle}>请输入您的电子邮件，我们将在下一步发送OTP代码以重置您的密码。</Text>
+                <Text style={styles.title}>{t('auth.forget.email.title')}🔑</Text>
+                <Text style={styles.subTitle}>{t('auth.forget.email.subtitle')}</Text>
 
-                <View style={{marginTop: 20,}}>
+                <View style={{marginTop: 20}}>
                     <Input
-                        label='邮箱'
+                        label={t("auth.login.form.email")}
                         error={false}
                         style={[styles.input]}
                         onChangeText={(text:string) => forgetStore?.changeEmail(text)}
@@ -50,7 +54,7 @@ function AuthEmail(props: any) {
                             fontWeight: '600',
                             textAlign: 'center',
                         }}>
-                            继续
+                            {t("auth.forget.email.continue")}
                         </Text>
                     </Button>
                 </View>
