@@ -13,7 +13,6 @@ import Loading from "./component/loading";
 const ChannelScreen = () => {
     const headerHeight = useHeaderHeight();
     const {setTopInset} = useAttachmentPickerContext();
-    const {channel} = useAppContext();
 
     useEffect(() => {
         setTopInset(headerHeight);
@@ -22,7 +21,7 @@ const ChannelScreen = () => {
 
     return (
         <SafeAreaView>
-            <ChannelScreenApp channel={channel as any} keyboardVerticalOffset={headerHeight} />
+            <ChannelScreenApp />
         </SafeAreaView>
     )
 }

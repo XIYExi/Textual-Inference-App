@@ -26,6 +26,7 @@ import ChangePWD from "./auth/forget/changePWD/ChangePWD";
 import FillinApp from "./auth/fillin/FillinApp";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import UserApp from "./user/UserApp";
+import ViewServerApp from "./api/ViewServerApp";
 
 
 const MainStack = createNativeStackNavigator();
@@ -103,10 +104,10 @@ const WelStackScreen = () => {
 }
 
 const MainStackScreen = () => {
-    const {channel} = useAppContext();
+    // const {channel} = useAppContext();
     const insets = useSafeAreaInsets();
-    const {clientIsReady} = useChatClient();
-    console.log('app begin clientIsReady ? -> ', clientIsReady)
+    //const {clientIsReady} = useChatClient();
+    const clientIsReady = true;
 
     const {
         theme: {
@@ -116,7 +117,7 @@ const MainStackScreen = () => {
 
     return (
         <MainStack.Navigator
-            initialRouteName="ChannelList"
+            initialRouteName="Channel"
         >
             {
                 clientIsReady ? (
@@ -139,9 +140,7 @@ const MainStackScreen = () => {
                                                         paddingTop: insets.top,
                                                         height: CHANNEL_SCREEN_HEADER_HEIGHT + insets.top,
                                                     }}>
-                                                    <Channel channel={channel as any}>
-                                                        <ChannelHeader {...props as any} channel={channel} />
-                                                    </Channel>
+                                                    <ChannelHeader {...props as any} />
                                                 </View>
                                             </>
                                         ),
@@ -226,7 +225,7 @@ export const Apps = () => {
 
     return (
         <RootStack.Navigator
-            initialRouteName='Register'
+            initialRouteName='Login'
         >
             <RootStack.Screen
                 name='Wel'
@@ -262,6 +261,7 @@ export const Apps = () => {
                 name='Api'
                 component={ApiApp}
             />
+            <RootStack.Screen name='web' component={ViewServerApp}/>
             <RootStack.Screen
                 name='Datadash'
                 component={DatadashApp}

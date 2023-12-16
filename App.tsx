@@ -16,6 +16,7 @@ import {ThemeProvider, useThemeContext} from './src/themeContext';
 import {SearchContextProvider} from "./src/SearchContext";
 import {NewMessageProvider} from "./src/NewMessageContext";
 import {Apps} from "./src/app/Apps";
+import HeartProvider from "./src/components/websocket/HeartProvider";
 
 
 function App(): JSX.Element {
@@ -25,25 +26,27 @@ function App(): JSX.Element {
   return (
       <SafeAreaProvider>
           <NavigationContainer theme={theme.mode === 'Light' ? DefaultTheme : DarkTheme}>
-              <AppProvider>
-                  <SearchContextProvider>
-                      <AntdRnProvider>
-                          <Provider {...stores}>
-                              <GestureHandlerRootView style={{ flex: 1 }}>
-                                  <SafeAreaView style={{ flex: 1 }}>
-                                      <OverlayProvider>
-                                          <NewMessageProvider>
-                                              <Chat client={chatClient}>
-                                                  <Apps />
-                                              </Chat>
-                                          </NewMessageProvider>
-                                      </OverlayProvider>
-                                  </SafeAreaView>
-                              </GestureHandlerRootView>
-                          </Provider>
-                      </AntdRnProvider>
-                  </SearchContextProvider>
-              </AppProvider>
+              <HeartProvider>
+                  <AppProvider>
+                      <SearchContextProvider>
+                          <AntdRnProvider>
+                              <Provider {...stores}>
+                                  <GestureHandlerRootView style={{ flex: 1 }}>
+                                      <SafeAreaView style={{ flex: 1 }}>
+                                          <OverlayProvider>
+                                              <NewMessageProvider>
+                                                  <Chat client={chatClient}>
+                                                      <Apps />
+                                                  </Chat>
+                                              </NewMessageProvider>
+                                          </OverlayProvider>
+                                      </SafeAreaView>
+                                  </GestureHandlerRootView>
+                              </Provider>
+                          </AntdRnProvider>
+                      </SearchContextProvider>
+                  </AppProvider>
+              </HeartProvider>
           </NavigationContainer>
       </SafeAreaProvider>
   );

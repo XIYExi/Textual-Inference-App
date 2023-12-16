@@ -4,7 +4,6 @@ import {
     View,
     TextInput,
     TouchableOpacity,
-    Text,
 } from 'react-native';
 import {Search, useTheme, CircleClose} from 'stream-chat-react-native';
 import {useNavigation} from '@react-navigation/native';

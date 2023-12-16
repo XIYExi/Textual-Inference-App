@@ -105,7 +105,11 @@ const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,chatStore})
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    {channel && <ChannelAvatar channel={channel} />}
+
+                    {/*TODO 用户头像*/}
+                    {/*{channel && <ChannelAvatar channel={channel} />}*/}
+
+
                     <Flex style={styles.rightContainer} justify='end'>
                         <View style={{marginRight: 20}}>
                             <Pressable onPress={() => chatStore.changeOpenAddon()}>
