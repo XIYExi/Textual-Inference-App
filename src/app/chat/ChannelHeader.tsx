@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     container: {
         marginVertical: 4,
         paddingHorizontal: 8,
+        paddingVertical: 15,
         flex: 1,
     },
     leftContainer: {
@@ -60,30 +61,7 @@ export type ChannelHeader = {
 
 const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,chatStore}) => {
     const displayName = useChannelPreviewDisplayName(channel);
-    const {chatClient} = useAppContext();
     const [count, setCount] = useState<number>();
-    const {
-        theme: {
-            colors: {accent_blue, white},
-        },
-    } = useTheme();
-
-    useEffect(() => {
-        const user = chatClient?.user;
-        const unreadCount = isOwnUser(user) ? user.total_unread_count : undefined;
-        setCount(unreadCount);
-        const listener = chatClient?.on(e => {
-            if (e.total_unread_count) {
-                setCount(e.total_unread_count);
-            }
-        });
-
-        return () => {
-            if (listener) {
-                listener.unsubscribe();
-            }
-        };
-    }, [chatClient]);
 
     return (
         <>
@@ -92,14 +70,14 @@ const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,chatStore})
                     <View style={styles.leftContainer}>
                         <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
                             <View style={styles.backButtonContainer}>
-                                <BackButton pathFill={accent_blue} width={22} />
+                                <BackButton pathFill={'#005FFF'} width={22} />
                                 {count ? (
                                     <View
                                         style={[
                                             styles.counterBadge,
-                                            {backgroundColor: accent_blue},
+                                            {backgroundColor: '#005FFF'},
                                         ]}>
-                                        <Text style={{color: white}}>{count}</Text>
+                                        <Text style={{color: '#fff'}}>{count}</Text>
                                     </View>
                                 ) : null}
                             </View>

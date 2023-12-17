@@ -11,6 +11,7 @@ type AppContextType = {
     setChannel: (channel: ChannelType<StreamChatGenerics>) => void;
     setChannelWithId: (channelId: string, messageId?: string) => Promise<void>;
     messageId?: string;
+    userId: string;
 };
 
 export const AppContext = React.createContext({} as AppContextType);
@@ -18,6 +19,7 @@ export const AppContext = React.createContext({} as AppContextType);
 type State = {
     channel?: ChannelType;
     messageId?: string;
+    userId?: string;
 };
 
 
@@ -26,6 +28,7 @@ export const AppProvider = (props: {children: ReactNode}) => {
 
     const [state, setState] = useState<State>({});
     const {channel, messageId} = state;
+    const [userId, setUserId] = useState('usisjanz');
 
     const setChannelWithId = useCallback(
         async (channelId: string, innerMessageId?: string) => {
@@ -47,7 +50,7 @@ export const AppProvider = (props: {children: ReactNode}) => {
 
     return (
         <AppContext.Provider
-            value={{channel, setChannel, chatClient, setChannelWithId, messageId}}>
+            value={{channel, setChannel, chatClient, setChannelWithId, messageId, userId}}>
             {children}
         </AppContext.Provider>
     );

@@ -12,7 +12,7 @@ import newWebSocket from "../../components/websocket/wensocketConfig";
 import {port, wsUri} from "../../utils/port";
 
 interface IProps {
-
+    channelId: string;
 }
 
 
@@ -27,9 +27,10 @@ const ChannelScreenApp:FC<IProps> = (props:IProps) => {
     const headerHeight = useHeaderHeight();
     const [ws, setWs] = useState<WebSocket>();
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const {channelId} = props;
+
 
     const userId = 'usisjanz';
-    const channelId = 'test1';
     const channelName = 'test1';
 
     useEffect(() => {
@@ -67,10 +68,13 @@ const ChannelScreenApp:FC<IProps> = (props:IProps) => {
 
                 console.log(res.data)
 
-                setMessages(res.data);
+                const _message = [...res.data, ...messages];
+
+                setMessages(_message);
+                setCurrentPage(prevState =>  prevState + 1); // 页数+1，下次获取的时候就可以直接获得最新的数据
             })
             .catch(err => {
-                console.log(`【登录认证失败】 -> ${err}`);
+                console.log(`【获取历史消息失败】 -> ${err}`);
             })
     }
 

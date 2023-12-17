@@ -10,18 +10,17 @@ import {Flex, Modal, View, WingBlank, Text, Button, WhiteSpace} from "@ant-desig
 import Loading from "./component/loading";
 
 
-const ChannelScreen = () => {
+const ChannelScreen = (props:any) => {
     const headerHeight = useHeaderHeight();
     const {setTopInset} = useAttachmentPickerContext();
 
     useEffect(() => {
         setTopInset(headerHeight);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headerHeight]);
 
     return (
         <SafeAreaView>
-            <ChannelScreenApp />
+            <ChannelScreenApp channelId={props.channelId}/>
         </SafeAreaView>
     )
 }
@@ -29,6 +28,7 @@ const ChannelScreen = () => {
 
 interface IProps {
     chatStore: IChatStore;
+    [key:string]:any;
 }
 interface IState {}
 
@@ -47,11 +47,12 @@ class ChatApp extends Component<IProps, IState> {
     render() {
 
         const {chatStore} = this.props;
+        const {id} = this.props.route.params;
 
         return (
             <WingBlank style={styles.wrapper}>
 
-                <ChannelScreen />
+                <ChannelScreen channelId={id}/>
 
                 <Loading loading={chatStore.loading} />
 

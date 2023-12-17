@@ -1,9 +1,9 @@
 import React from 'react';
+import { Text } from 'react-native';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {Spinner, useTheme} from 'stream-chat-react-native';
 
-import type {MessageResponse} from 'stream-chat';
 import {MessageSearchItem} from './MessageSearchItem';
+import {IChannelListPreview} from "../../hook/usePaginatedSearchedMessages";
 
 const styles = StyleSheet.create({
   contentContainer: {flexGrow: 1},
@@ -47,36 +47,30 @@ type MessageSearchListProps = {
   EmptySearchIndicator: React.ComponentType;
   loading: boolean;
   loadMore: () => void;
-  messages: MessageResponse[] | undefined;
+  messages: IChannelListPreview[];
   refreshing: boolean;
   refreshList: () => void;
-  setChannelWithId: (channelId: string, messageId?: string) => Promise<void>;
+  empty: boolean;
 };
-export const MessageSearchList: React.FC<MessageSearchListProps> = ({
-  EmptySearchIndicator,
-  loading,
-  loadMore,
-  messages,
-  refreshing,
-  refreshList,
-  setChannelWithId,
-}) => {
-  const {
-    theme: {
-      colors: {white_snow},
-    },
-  } = useTheme();
 
-  if (loading && !refreshing && (!messages || messages.length === 0)) {
+export const MessageSearchList: React.FC<MessageSearchListProps> = ({
+    EmptySearchIndicator,
+    loading,
+    loadMore,
+    messages,
+    refreshing,
+    refreshList,
+    empty
+}) => {
+
+
+  if (loading && !refreshing && (!messages || messages.length === 0) && !empty) {
     return (
       <View
         style={[
           styles.indicatorContainer,
-          {
-            backgroundColor: white_snow,
-          },
         ]}>
-        <Spinner />
+        <Text>loading...</Text>
       </View>
     );
   }
@@ -89,19 +83,16 @@ export const MessageSearchList: React.FC<MessageSearchListProps> = ({
       <FlatList
         contentContainerStyle={[
           styles.contentContainer,
-          {
-            backgroundColor: white_snow,
-          },
         ]}
         // TODO: Remove the following filter once we have two way scroll functionality on threads.
-        data={messages ? messages.filter(({parent_id}) => !parent_id) : []}
+        data={messages}
         ListEmptyComponent={EmptySearchIndicator}
         keyboardDismissMode="on-drag"
         onEndReached={loadMore}
         onRefresh={refreshList}
         refreshing={refreshing}
         renderItem={({item}) => (
-          <MessageSearchItem item={item} setChannelWithId={setChannelWithId} />
+          <MessageSearchItem item={item} />
         )}
         style={styles.flex}
       />

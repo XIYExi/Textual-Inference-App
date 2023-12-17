@@ -4,8 +4,9 @@ import {
     View,
     TextInput,
     TouchableOpacity,
+    Text,
 } from 'react-native';
-import {Search, useTheme, CircleClose} from 'stream-chat-react-native';
+
 import {useNavigation} from '@react-navigation/native';
 import {SearchContext} from "../../SearchContext";
 import {Compose} from "../../components/Compose";
@@ -35,11 +36,7 @@ const styles = StyleSheet.create({
 });
 
 export const ChannelListHeader = () => {
-    const {
-        theme: {
-            colors: {black, grey, grey_whisper, white_snow, accent_blue},
-        },
-    } = useTheme();
+
 
     const navigation = useNavigation();
 
@@ -48,23 +45,26 @@ export const ChannelListHeader = () => {
         searchInputText,
         setSearchInputText,
         setSearchQuery,
-        reset,
+        setShouldReset,
     } = useContext(SearchContext);
 
+    // 文本框输入的时候change的回调
     const onChangeText = useCallback(
         (text:string) => {
             setSearchInputText(text);
             if (!text) {
-                reset();
                 setSearchQuery('');
+                console.log('!')
             }
         },
-        [reset, setSearchInputText, setSearchQuery],
+        [setSearchInputText, setSearchQuery],
     );
 
+    // 点击submit发送按钮的回调
     const onSubmitEditing = useCallback(
         /*@ts-ignore*/
         ({nativeEvent: {text}}) => {
+            console.log('query: -> ',text)
             setSearchQuery(text);
         },
         [setSearchQuery],
@@ -74,8 +74,8 @@ export const ChannelListHeader = () => {
         setSearchInputText('');
         setSearchQuery('');
         searchInputRef.current?.blur();
-        reset();
-    }, [reset, searchInputRef, setSearchInputText, setSearchQuery]);
+        setShouldReset(true); // 需要重置
+    }, [setShouldReset, searchInputRef, setSearchInputText, setSearchQuery]);
 
     const onClickNewMessage = () => {
         // return navigation.navigate('NewMessage');
@@ -88,7 +88,7 @@ export const ChannelListHeader = () => {
                 justify='around'
                 align='center'
                 style={{
-                    backgroundColor: white_snow,
+                    backgroundColor: '#fff', // white_snow
                     marginTop: 14,
                 }}
             >
@@ -96,24 +96,24 @@ export const ChannelListHeader = () => {
                 <View style={[
                         styles.searchContainer,
                         {
-                            backgroundColor: grey_whisper,
-                            borderColor: grey_whisper,
+                            backgroundColor: '#fff', // grey_whisper
+                            borderColor: '#1C1E22',
                         },
                     ]}>
-                    <Search width={18} pathFill={grey} />
+
                     <TextInput
                         onChangeText={onChangeText}
                         onSubmitEditing={onSubmitEditing}
                         placeholder="Search"
-                        placeholderTextColor={grey}
+                        placeholderTextColor={'#7A7A7A'}
                         ref={searchInputRef}
                         returnKeyType="search"
-                        style={[styles.searchInput, {color: black}]}
+                        style={[styles.searchInput, {color: '#000'}]}
                         value={searchInputText}
                     />
                     {!!searchInputText && (
                         <TouchableOpacity onPress={onClearInputText}>
-                            <CircleClose pathFill={grey} />
+                            <Text>x</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -121,7 +121,7 @@ export const ChannelListHeader = () => {
                 {/*新建对话*/}
                 <View>
                     <TouchableOpacity onPress={onClickNewMessage}>
-                        <Compose height={30} width={30} pathFill={accent_blue} />
+                        <Compose height={30} width={30} pathFill={'#005FFF'} />
                     </TouchableOpacity>
                 </View>
             </Flex>

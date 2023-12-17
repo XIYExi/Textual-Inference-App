@@ -106,7 +106,9 @@ const WelStackScreen = () => {
 const MainStackScreen = () => {
     // const {channel} = useAppContext();
     const insets = useSafeAreaInsets();
-    //const {clientIsReady} = useChatClient();
+    // console.log('insets', insets)
+
+
     const clientIsReady = true;
 
     const {
@@ -117,7 +119,7 @@ const MainStackScreen = () => {
 
     return (
         <MainStack.Navigator
-            initialRouteName="Channel"
+            initialRouteName="ChannelList"
         >
             {
                 clientIsReady ? (
@@ -128,7 +130,7 @@ const MainStackScreen = () => {
                             options={() => {
                                 return {
                                     header: props =>
-                                        !!insets.top && (
+                                        !!insets && (
                                             <>
                                                 <StatusBar
                                                     backgroundColor="transparent"

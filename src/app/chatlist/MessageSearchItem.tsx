@@ -1,19 +1,13 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Avatar, useTheme } from 'stream-chat-react-native';
-import type {MessageResponse} from 'stream-chat';
-
-import {formatLatestMessageDate} from "../../utils/utils";
 import {Right} from "../../components/Right";
+import {IChannelListPreview} from "../../hook/usePaginatedSearchedMessages";
+import ThemeText from "../../components/ThemeText";
+import {Flex} from "@ant-design/react-native";
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        paddingTop: 10,
-        paddingHorizontal: 8,
-    },
+
     contentContainer: {
         height: 60,
         flex: 1,
@@ -24,6 +18,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingBottom: 5,
+    },
+    placeholderAvatar: {
+        width: 42,
+        height: 42,
+        borderRadius: 100,
+        backgroundColor: 'rgba(0, 0, 0, .5)',
     },
     row: {
         alignItems: 'center',
@@ -72,72 +72,61 @@ const styles = StyleSheet.create({
         maxWidth: 16,
         maxHeight: 16,
     },
+    messageItemContainer: {
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginLeft: 10,
+        marginRight: 5,
+        marginBottom: 12,
+    },
+    channelMessageContainer: {
+        marginLeft: 8,
+
+    },
+    channelItemTitle: {
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    channelItemReply: {
+        fontWeight: '300',
+        fontSize: 12,
+    },
 });
 
 type MessageSearchListProps = {
-    item: MessageResponse;
-    setChannelWithId: (channelId: string, messageId?: string) => Promise<void>;
+    item: IChannelListPreview;
 };
 
-export const MessageSearchItem: React.FC<MessageSearchListProps> = ({item, setChannelWithId,}) => {
+export const MessageSearchItem: React.FC<MessageSearchListProps> = ({item}) => {
     const navigation = useNavigation();
-    const {
-        theme: {
-            colors: {black, border, grey},
-        },
-    } = useTheme();
 
     return (
         <TouchableOpacity
             onPress={() => {
-                if (item.channel?.id) {
-                    setChannelWithId(item.channel?.id, item.id);
-                    /*@ts-ignore*/
-                    navigation.navigate('Channel');
-                }
-            }}
-            style={[styles.container, {borderBottomColor: border}]}
-            testID="channel-preview-button">
-            <View style={[styles.avatarContainer]}>
-                <Avatar
-                    image={item.user?.image as string}
-                    name={item.user?.name}
-                    size={40}
-                />
-            </View>
 
-            <View style={[styles.contentContainer, {borderColor: border}]}>
-                <View style={[styles.row]}>
-                    <Text
-                        numberOfLines={1}
-                        style={[styles.titleContainer, {color: black}]}>
-                        <Text style={styles.title}>{`${item.user?.name} `}</Text>
-                        {!!item.channel?.name && (
-                            <Text style={styles.detailsText}>
-                                in
-                                <Text style={styles.title}>{` ${item.channel?.name}`}</Text>
-                            </Text>
-                        )}
-                    </Text>
-                    <View style={styles.row}>
-                        <Text style={[styles.date, {color: grey}]}>
-                            {formatLatestMessageDate(item.created_at)}
-                        </Text>
-                        <Right width={16} style={styles.svg} pathFill={grey} />
+                //@ts-ignore
+                navigation.navigate('Channel', {id: item.channelId});
+            }}
+            testID="channel-preview-button">
+            <View id={item.userId} style={styles.messageItemContainer}>
+                <Flex justify='between' align='start'>
+                    <View>
+                        <Flex justify='start' align='center'>
+                            <View style={styles.placeholderAvatar}>
+
+                            </View>
+                            <View style={styles.channelMessageContainer}>
+                                <ThemeText
+                                    style={styles.channelItemTitle}>{item.channelName}</ThemeText>
+                                <ThemeText
+                                    style={styles.channelItemReply}>{item.message}</ThemeText>
+                            </View>
+                        </Flex>
                     </View>
-                </View>
-                <View style={[styles.row]}>
-                    <Text
-                        numberOfLines={2}
-                        style={[
-                            styles.message,
-                            {
-                                color: grey,
-                            },
-                        ]}>
-                        {item.text}
-                    </Text>
-                </View>
+                    <View>
+                        <Text>{item.time.toString()}</Text>
+                    </View>
+                </Flex>
             </View>
         </TouchableOpacity>
     );
