@@ -1,5 +1,11 @@
 import {makeAutoObservable} from "mobx";
 
+/**
+ * 这个store用于ChatApp！在用户在ChannelList中选择某个具体的Channel后需要添加Channel信息，
+ * 其余属性在Chat页面中控制样式和交互
+ */
+
+
 export interface IUploadItem {
     /*id: key值 uuid*/
     id: string;
@@ -18,7 +24,14 @@ interface IChatStore {
     addUploadList: any;
     removeUploadList: any;
     changeOpenAddon: any;
+
+
+    channelId: string;
+    channelName: string;
+    channelAvatar: string;
+    setChannelMessage: (param1: string, param2:string, param3:string) => void;
 }
+
 
 
 class ChatStore implements IChatStore {
@@ -27,9 +40,20 @@ class ChatStore implements IChatStore {
     uploadList:IUploadItem[] = [];
     loading = false;
 
+    channelId = '';
+    channelName = '';
+    channelAvatar = '';
+
     constructor() {
         makeAutoObservable(this);
     }
+
+    setChannelMessage(channelId: string, channelName: string, channelAvatar: string):void{
+        this.channelId = channelId;
+        this.channelName = channelName;
+        this.channelAvatar = channelAvatar;
+    }
+
 
     changeOpenAddon() {
         this.openAddon = !this.openAddon;

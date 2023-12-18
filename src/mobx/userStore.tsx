@@ -1,5 +1,11 @@
 import {makeAutoObservable} from "mobx";
 
+// 封装chat页面中用户的基本信息
+export type TChatUser = {
+    id: string;
+    name: string;
+    avatar: string;
+}
 interface IUserStore {
     id: string;
     name: string;
@@ -15,7 +21,8 @@ interface IUserStore {
 
     storeUser: (param: any) => void;
     storeSetting: (param: any) => void;
-    changeSettingMode: (param:string) => void;
+    changeSettingMode: (param: string) => void;
+    getChannelUserMessage: () => TChatUser;
 }
 
 class UserStore implements IUserStore {
@@ -23,11 +30,10 @@ class UserStore implements IUserStore {
     name = '';
     email = '';
     password = '';
-    avatar = '';
+    avatar = 'https://s11.ax1x.com/2023/12/18/pi57r7D.png';
     address = '';
     sex = '';
     occupation = '';
-
     settingId = '';
     mode = '';
 
@@ -44,6 +50,14 @@ class UserStore implements IUserStore {
         this.address = user.address;
         this.occupation = user.occupation;
         this.sex = user.sex;
+    }
+
+    getChannelUserMessage() {
+        return {
+            id: this.id,
+            name: this.name,
+            avatar: this.avatar
+        }
     }
 
     storeSetting({settingId, mode}: {[key:string]: string}) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import {FlatList, StyleSheet, View} from 'react-native';
 
-import {MessageSearchItem} from './MessageSearchItem';
+import MessageSearchItem from "./MessageSearchItem";
 import {IChannelListPreview} from "../../hook/usePaginatedSearchedMessages";
 
 const styles = StyleSheet.create({

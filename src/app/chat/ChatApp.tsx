@@ -1,5 +1,5 @@
 import ChannelScreenApp from "./ChannelScreenApp";
-import {Image, Pressable, SafeAreaView, StyleSheet} from "react-native";
+import {Image, Pressable, SafeAreaView, ScrollView, StyleSheet, TextInput} from "react-native";
 import {useHeaderHeight} from "@react-navigation/elements";
 import {useAttachmentPickerContext} from "stream-chat-react-native";
 import {useAppContext} from "../../AppContext";
@@ -8,6 +8,7 @@ import {IChatStore} from "../../mobx/chatStore";
 import {inject, observer} from "mobx-react";
 import {Flex, Modal, View, WingBlank, Text, Button, WhiteSpace} from "@ant-design/react-native";
 import Loading from "./component/loading";
+import QuestionInput from "./QuestionInput";
 
 
 const ChannelScreen = (props:any) => {
@@ -19,8 +20,10 @@ const ChannelScreen = (props:any) => {
     }, [headerHeight]);
 
     return (
-        <SafeAreaView>
-            <ChannelScreenApp channelId={props.channelId}/>
+        <SafeAreaView style={{flex: 1}}>
+            <ScrollView style={{flex: 1}}>
+                <ChannelScreenApp channelId={props.channelId}/>
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -39,7 +42,6 @@ class ChatApp extends Component<IProps, IState> {
         super(props);
     }
 
-
     handleOpenAddon = () => {
         this.props.chatStore.changeOpenAddon()
     }
@@ -47,12 +49,18 @@ class ChatApp extends Component<IProps, IState> {
     render() {
 
         const {chatStore} = this.props;
-        const {id} = this.props.route.params;
+        const {id} = this.props.route.params; // channelId,同样可以通过chatStore取出来
 
         return (
-            <WingBlank style={styles.wrapper}>
+            <View style={styles.wrapper}>
 
                 <ChannelScreen channelId={id}/>
+
+
+
+                <View>
+                    <QuestionInput />
+                </View>
 
                 <Loading loading={chatStore.loading} />
 
@@ -168,7 +176,7 @@ class ChatApp extends Component<IProps, IState> {
                     </WingBlank>
                 </Modal>
 
-            </WingBlank>
+            </View>
         )
     }
 }

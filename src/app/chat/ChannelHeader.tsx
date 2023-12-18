@@ -24,13 +24,19 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         flex: 1,
     },
+    placeholderAvatar: {
+        width: 42,
+        height: 42,
+        borderRadius: 100,
+        backgroundColor: 'rgba(0, 0, 0, .5)',
+    },
     leftContainer: {
         flex: 1,
     },
     backButtonContainer: {
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'flex-start',
     },
     counterBadge: {
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
     },
     middleContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'space-between',
         marginBottom: 10,
     },
@@ -60,7 +66,8 @@ export type ChannelHeader = {
 };
 
 const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,chatStore}) => {
-    const displayName = useChannelPreviewDisplayName(channel);
+    // const displayName = useChannelPreviewDisplayName(channel);
+    const displayName = chatStore?.channelName || '新建对话';
     const [count, setCount] = useState<number>();
 
     return (
@@ -84,8 +91,10 @@ const ChannelHeader: React.FC<ChannelHeader> = ({channel, navigation,chatStore})
                         </TouchableWithoutFeedback>
                     </View>
 
-                    {/*TODO 用户头像*/}
+                    {/*TODO Channel头像*/}
                     {/*{channel && <ChannelAvatar channel={channel} />}*/}
+                    <View style={styles.placeholderAvatar}>
+                    </View>
 
 
                     <Flex style={styles.rightContainer} justify='end'>

@@ -4,6 +4,9 @@ import React, { ReactNode, useCallback, useState} from 'react';
 import {Channel as ChannelType, StreamChat} from 'stream-chat';
 import {chatClient, StreamChatGenerics} from "./app/chat/steam/chatConfig";
 
+/**
+ * 全局存储，比方说userId
+ */
 
 type AppContextType = {
     chatClient: StreamChat<StreamChatGenerics>;

@@ -5,9 +5,10 @@ import {Right} from "../../components/Right";
 import {IChannelListPreview} from "../../hook/usePaginatedSearchedMessages";
 import ThemeText from "../../components/ThemeText";
 import {Flex} from "@ant-design/react-native";
+import {IChatStore} from "../../mobx/chatStore";
+import {inject, observer} from "mobx-react";
 
 const styles = StyleSheet.create({
-
     contentContainer: {
         height: 60,
         flex: 1,
@@ -95,14 +96,18 @@ const styles = StyleSheet.create({
 
 type MessageSearchListProps = {
     item: IChannelListPreview;
+    chatStore?:IChatStore;
 };
 
-export const MessageSearchItem: React.FC<MessageSearchListProps> = ({item}) => {
+const MessageSearchItem: React.FC<MessageSearchListProps> = ({item, chatStore}) => {
     const navigation = useNavigation();
 
     return (
         <TouchableOpacity
             onPress={() => {
+                // TODO channel avatar先占位
+                const channelAvatar = '';
+                chatStore?.setChannelMessage(item.channelId, item.channelName, channelAvatar);
 
                 //@ts-ignore
                 navigation.navigate('Channel', {id: item.channelId});
@@ -131,3 +136,6 @@ export const MessageSearchItem: React.FC<MessageSearchListProps> = ({item}) => {
         </TouchableOpacity>
     );
 };
+
+
+export default inject('chatStore')(observer(MessageSearchItem));

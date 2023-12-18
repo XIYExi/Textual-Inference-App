@@ -6,15 +6,21 @@ import {HahaReaction} from "../../components/HahaReaction";
 import {QuestionReaction} from "../../components/QuestionReaction";
 import {ExclamationReaction} from "../../components/ExclamationReaction";
 import {myMessageTheme} from "../theme";
-import InputButton from "./InputButton";
 import {SendButton} from "./SendButton";
 import newWebSocket from "../../components/websocket/wensocketConfig";
 import {port, wsUri} from "../../utils/port";
+import {IUserStore, TChatUser} from "../../mobx/userStore";
+import {IChatStore} from "../../mobx/chatStore";
+import {useAppContext} from "../../AppContext";
+import {Image, StyleSheet} from "react-native";
+import ThemeText from "../../components/ThemeText";
 
 interface IProps {
     channelId: string;
-}
 
+    userStore?: IUserStore;
+    chatStore?: IChatStore;
+}
 
 interface IMessage {
     content: string;
@@ -22,16 +28,21 @@ interface IMessage {
     [key:string]: any;
 }
 
+
 const ChannelScreenApp:FC<IProps> = (props:IProps) => {
 
     const headerHeight = useHeaderHeight();
     const [ws, setWs] = useState<WebSocket>();
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const {channelId} = props;
+    const {userStore, chatStore} = props;
 
 
-    const userId = 'usisjanz';
-    const channelName = 'test1';
+    let {userId} = useAppContext(); // 取出userId
+
+    const channelId = chatStore?.channelId;
+    const channelName = chatStore?.channelName;
+    const chatUser = userStore?.getChannelUserMessage() || {id:'', name: '', avatar: ''};
+
 
     useEffect(() => {
         // 当ChannelScreenApp渲染时，需要完成两件事
@@ -50,20 +61,21 @@ const ChannelScreenApp:FC<IProps> = (props:IProps) => {
 
     const [messages, setMessages] = useState<IMessage[]>([]);
 
+    // 每一次取出3条数据
     const handleFetchMessageEach = async () => {
-        await fetch(`${port}/chat/messageEach`,{
+        await fetch(`${port}/chat/messageEach`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-type':'application/json'
+                'Content-type': 'application/json'
             },
             body: JSON.stringify({
                 channelId: channelId,
                 page: currentPage,
             }),
         })
-            .then((response:any) => response.json())
-            .then((data:any) => {
+            .then((response: any) => response.json())
+            .then((data: any) => {
                 const {res} = data.data;
 
                 console.log(res.data)
@@ -71,7 +83,7 @@ const ChannelScreenApp:FC<IProps> = (props:IProps) => {
                 const _message = [...res.data, ...messages];
 
                 setMessages(_message);
-                setCurrentPage(prevState =>  prevState + 1); // 页数+1，下次获取的时候就可以直接获得最新的数据
+                setCurrentPage(prevState => prevState + 1); // 页数+1，下次获取的时候就可以直接获得最新的数据
             })
             .catch(err => {
                 console.log(`【获取历史消息失败】 -> ${err}`);
@@ -79,31 +91,85 @@ const ChannelScreenApp:FC<IProps> = (props:IProps) => {
     }
 
 
+    console.log('render前show一下：', chatUser);
 
     return (
         <View>
 
             {
-                messages.length > 0 && messages.map((item:IMessage, index:number) => (
-                    <View key={index} style={{paddingVertical: 10, paddingHorizontal: 20}}>
-                        <View>
-                            <Text>User</Text>
-                            <Text>{item.content}</Text>
+                messages.length > 0 && messages.map((item: IMessage, index: number) => (
+                    <View key={index} style={[{paddingVertical: 10}, ]}>
+                        <View style={styles.questionWrapper}>
+                            <Flex align='center'>
+                                <View style={styles.imageContainer}>
+                                    <Image source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}} style={styles.chatAvatar}/>
+                                </View>
+                                <View style={styles.textContainer}>
+                                    <ThemeText style={styles.userName}>{chatUser.name}</ThemeText>
+                                    <ThemeText style={styles.question}>{item.content}</ThemeText>
+                                </View>
+                            </Flex>
                         </View>
 
-
-                        <View>
-                            <Text>Orange</Text>
-                            <Text>{item.reply}</Text>
+                        <View style={styles.replyWrapper}>
+                            <Flex align='center'>
+                                <View style={styles.imageContainer}>
+                                    <Image source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}} style={styles.chatAvatar}/>
+                                </View>
+                                <View style={styles.textContainer}>
+                                    <ThemeText style={styles.userName}>orange</ThemeText>
+                                    <ThemeText style={styles.question}>{item.reply}</ThemeText>
+                                </View>
+                            </Flex>
                         </View>
                     </View>
                 ))
             }
-
 
         </View>
     )
 
 }
 
-export default ChannelScreenApp;
+
+const styles = StyleSheet.create({
+    imageContainer: {
+        backgroundColor: 'rgba(0,0,0,.1)',
+        borderRadius: 30,
+        marginRight: 8,
+    },
+    chatAvatar: {
+        width: 30,
+        height: 30,
+    },
+    textContainer: {
+        marginLeft: 3,
+    },
+    userName: {
+        fontSize: 18,
+        fontWeight: '500',
+        fontStyle: 'normal',
+    },
+    question: {
+        marginVertical: 5,
+        fontSize: 15,
+        fontWeight: '200',
+        fontStyle: 'normal',
+
+    },
+    questionWrapper: {
+        backgroundColor: 'rgba(0,0,0,0.05)',
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+    },
+    replyWrapper: {
+        paddingHorizontal: 20,
+        backgroundColor: 'rgba(248,245,245,0.8)',
+        paddingVertical: 16,
+    }
+})
+
+
+
+
+export default inject('userStore', 'chatStore')(observer(ChannelScreenApp));
